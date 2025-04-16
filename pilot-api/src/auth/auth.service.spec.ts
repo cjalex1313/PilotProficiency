@@ -186,7 +186,7 @@ describe('AuthService', () => {
       email,
       passwordHash: '123',
       emailConfirmed: true,
-      roles: ['Tenant'],
+      roles: ['Pilot'],
     });
     mockArgon2Verify.mockReturnValue(true);
 
@@ -199,7 +199,7 @@ describe('AuthService', () => {
   it('register should throw a EmailAlreadyExistsException if email already used', async () => {
     const email = 'test@gmail.com';
     const password = 'pass';
-    const role = Role.Tenant;
+    const role = Role.Pilot;
 
     mockUserService.findByEmail.mockReturnValue({ email });
 
@@ -214,7 +214,7 @@ describe('AuthService', () => {
   it('register call the create user on userService and return the created user', async () => {
     const email = 'test@gmail.com';
     const password = 'pass';
-    const role = Role.Tenant;
+    const role = Role.Pilot;
 
     mockUserService.findByEmail.mockReturnValue(null);
     mockUserService.createUser.mockReturnValue({});

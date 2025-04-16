@@ -80,7 +80,7 @@ describe('AuthController', () => {
       const registerDto: RegisterDto = {
         email: 'newuser@example.com',
         password: 'newpassword',
-        role: Role.Landlord,
+        role: Role.Pilot,
       };
       // Mock the return value (void in this case)
       authService.register.mockResolvedValue(undefined);
@@ -102,7 +102,7 @@ describe('AuthController', () => {
       const mockUser = {
         userId: 1,
         email: 'test@example.com',
-        role: Role.Tenant,
+        role: Role.Pilot,
       };
       const mockRequest = { user: mockUser }; // Simulate request object after guard adds user
 

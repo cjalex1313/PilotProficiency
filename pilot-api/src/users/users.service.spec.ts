@@ -79,7 +79,7 @@ describe('UsersService', () => {
   it('createUser should throw a EmailNotValidException if the email is not valid', async () => {
     const emailToCreate = 'notAnEmail';
     const password = 'password';
-    const role: Role = Role.Tenant;
+    const role: Role = Role.Pilot;
 
     try {
       await service.createUser(emailToCreate, password, role);
@@ -92,7 +92,7 @@ describe('UsersService', () => {
   it('createUser should save the user to the db and ', async () => {
     const emailToCreate = 'test@test.com';
     const password = 'password';
-    const role: Role = Role.Tenant;
+    const role: Role = Role.Pilot;
 
     mockUserModel.create.mockImplementation((user) => {
       return {
