@@ -1,0 +1,63 @@
+{
+  "login": {
+    "title": "Welcome back",
+    "subtitle": "Enter your credentials to access your account",
+    "email": {
+      "label": "Email",
+      "required": "Email is required",
+      "invalid": "Email is invalid"
+    },
+    "password": {
+      "label": "Password",
+      "required": "Password is required"
+    },
+    "forgot-password": "Forgot password?",
+    "login": "Login",
+    "no-account": "Don't have an account?",
+    "signup": "Sign up"
+  },
+  "email": "Email",
+  "password": "Password",
+  "confirmPassword": "Confirm password",
+  "accountType": {
+    "label": "Account type",
+    "Tenant": "Tenant",
+    "Landlord": "Landlord"
+  },
+  "forgot-password": {
+    "title": "Need a New Password?",
+    "subtitle": "Just provide your email, and we'll send a reset link",
+    "submit": "Continue",
+    "feedback": "Please check your email"
+  },
+  "reset-password": {
+    "title": "New Password",
+    "subtitle": "Set your new password here",
+    "submit": "Update Password"
+  },
+  "register": {
+    "title": "Create your account",
+    "subtitle": "Already have an account?",
+    "sign-in": "Sign in",
+    "submit": "Create account",
+    "success": "Please check your email",
+    "email": {
+      "required": "Email is required",
+      "invalid": "Email is invalid"
+    },
+    "password": {
+      "required": "Password is required"
+    },
+    "confirmPassword": {
+      "required": "Confirm password is required",
+      "passwordIsSame": "Password do not match"
+    }
+  },
+  "errors": {
+    "1": "Email {email} already exists",
+    "2": "{email} is not a valid email",
+    "3": "{email} is not confirmed. Please check your email",
+    "4": "Email not found",
+    "5": "Incorrect password"
+  }
+}

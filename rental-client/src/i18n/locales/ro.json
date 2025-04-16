@@ -1,0 +1,26 @@
+{
+  "login": {
+    "title": "Bine ai revenit",
+    "subtitle": "Introdu datele pentru a accesa contul tău",
+    "email": {
+      "label": "Adresă de e-mail",
+      "required": "Adresa de e-mail este obligatorie",
+      "invalid": "Adresa de e-mail este invalidă"
+    },
+    "password": {
+      "label": "Parolă",
+      "required": "Parola este obligatorie"
+    },
+    "forgot-password": "Ai uitat parola?",
+    "login": "Autentificare",
+    "no-account": "Nu ai cont?",
+    "signup": "Creează cont"
+  },
+  "errors": {
+    "1": "Emailul {email} există deja",
+    "2": "{email} nu este o adresă de email validă",
+    "3": "Emailul {email} nu este confirmat. Te rugăm să verifici emailul.",
+    "4": "Email negăsit",
+    "5": "Parolă incorectă"
+  }
+}

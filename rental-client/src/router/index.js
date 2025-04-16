@@ -1,0 +1,69 @@
+import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '../views/HomeView.vue'
+import BaseLayout from '@/layouts/baseLayout.vue'
+import AuthLayout from '@/layouts/authLayout.vue'
+import LoginView from '@/views/auth/LoginView.vue'
+import RegisterView from '@/views/auth/RegisterView.vue'
+import ForgotPasswordView from '@/views/auth/ForgotPasswordView.vue'
+import ResetPasswordView from '@/views/auth/ResetPasswordView.vue'
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',
+      name: 'BaseLayout',
+      meta: { requireAuth: true },
+      component: BaseLayout,
+      children: [
+        {
+          path: '/',
+          name: 'Home',
+          component: HomeView,
+        },
+      ],
+    },
+    {
+      path: '/auth',
+      name: 'AuthLayout',
+      component: AuthLayout,
+      children: [
+        {
+          path: '',
+          name: 'Login',
+          component: LoginView,
+        },
+        {
+          path: 'register',
+          name: 'Register',
+          component: RegisterView,
+        },
+        {
+          path: 'forgot-password',
+          name: 'ForgotPassword',
+          component: ForgotPasswordView,
+        },
+        {
+          path: 'reset-password',
+          name: 'ResetPassword',
+          component: ResetPasswordView,
+        },
+      ],
+    },
+  ],
+})
+
+router.beforeEach((to, from, next) => {
+  const jwt = localStorage.getItem('jwt')
+  if (to.meta.requireAuth && !jwt) {
+    next({ name: 'Login' })
+    return
+  }
+  if (!to.meta.requiresAuth && jwt && to.path.startsWith('/auth')) {
+    next({ name: 'Home' })
+    return
+  }
+  next()
+})
+
+export default router
