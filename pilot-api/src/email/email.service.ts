@@ -100,14 +100,14 @@ export class EmailService {
     const activationLink = `${this.config.auth.activationUrl}?token=${activationToken}&userId=${userId}`;
     await this.sendEmail({
       to: email,
-      subject: 'Welcome to Rental! Confirm your Email',
+      subject: 'Welcome to Pilot! Confirm your Email',
       template: 'welcome', // Assumes welcome.hbs exists in TEMPLATE_PATH
       context: {
         url: activationLink,
-        appName: this.configService.get<string>('MAIL_FROM_NAME', 'Rental'),
+        appName: this.configService.get<string>('MAIL_FROM_NAME', 'Pilot'),
       },
       // Optional: Provide a plain text version as fallback
-      text: `Hi,\nWelcome to Rental! Please activate your account here: ${activationLink}\nThanks,\nThe Rental Team`,
+      text: `Hi,\nWelcome to Pilot! Please activate your account here: ${activationLink}\nThanks,\nThe Pilot Team`,
     });
   }
 
@@ -115,12 +115,12 @@ export class EmailService {
     const resetLink = `${this.config.auth.resetPasswordUrl}?token=${resetToken}&userId=${userId}`;
     await this.sendEmail({
       to: email,
-      subject: 'Rental - Password Reset Request',
+      subject: 'Pilot - Password Reset Request',
       template: 'password-reset', // Assumes password-reset.hbs exists
       context: {
         url: resetLink,
       },
-      text: `Hi,\nSomeone requested a password reset for your Rental account. Click here to reset: ${resetLink}\nIf you did not request this, please ignore this email.`,
+      text: `Hi,\nSomeone requested a password reset for your Pilot account. Click here to reset: ${resetLink}\nIf you did not request this, please ignore this email.`,
     });
   }
 }

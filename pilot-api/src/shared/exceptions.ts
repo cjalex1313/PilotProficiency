@@ -10,14 +10,14 @@ export const EXCEPTIONS_IDS = {
 
 export class EmailAlreadyExistsException extends HttpException {
   constructor(email: string) {
-    const rentalError = {
+    const pilotError = {
       id: EXCEPTIONS_IDS.EMAIL_ALREADY_EXISTS,
       email,
       message: `Email ${email} already exists`,
     };
     super(
       {
-        rentalError,
+        pilotError,
       },
       HttpStatus.CONFLICT,
     );
@@ -26,14 +26,14 @@ export class EmailAlreadyExistsException extends HttpException {
 
 export class EmailNotValidException extends HttpException {
   constructor(email: string) {
-    const rentalError = {
+    const pilotError = {
       id: EXCEPTIONS_IDS.EMAIL_NOT_VALID,
       email,
       message: `${email} is not a valid email`,
     };
     super(
       {
-        rentalError,
+        pilotError,
       },
       HttpStatus.BAD_REQUEST,
     );
@@ -42,14 +42,14 @@ export class EmailNotValidException extends HttpException {
 
 export class EmailNotConfirmedException extends HttpException {
   constructor(email: string) {
-    const rentalError = {
+    const pilotError = {
       id: EXCEPTIONS_IDS.EMAIL_NOT_CONFIRMED,
       email,
       message: `${email} is not confirmed. Please check your email.`,
     };
     super(
       {
-        rentalError,
+        pilotError,
       },
       HttpStatus.BAD_REQUEST,
     );
@@ -58,13 +58,13 @@ export class EmailNotConfirmedException extends HttpException {
 
 export class EmailNotFoundException extends HttpException {
   constructor() {
-    const rentalError = {
+    const pilotError = {
       id: EXCEPTIONS_IDS.EMAIL_NOT_FOUND,
       message: 'Email not found',
     };
     super(
       {
-        rentalError,
+        pilotError,
       },
       HttpStatus.NOT_FOUND,
     );
@@ -73,13 +73,13 @@ export class EmailNotFoundException extends HttpException {
 
 export class IncorrectPasswordException extends HttpException {
   constructor() {
-    const rentalError = {
+    const pilotError = {
       id: EXCEPTIONS_IDS.INCORRECT_PASSWORD,
       message: 'Incorrect password',
     };
     super(
       {
-        rentalError,
+        pilotError,
       },
       HttpStatus.UNAUTHORIZED,
     );

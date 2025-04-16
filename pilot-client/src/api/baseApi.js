@@ -46,12 +46,12 @@ export function useBaseApi() {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        if (error.response?.data?.rentalError) {
-          const rentalError = error.response?.data?.rentalError
-          const messageKey = `errors.${rentalError.id}`;
-          let message = t(messageKey, rentalError);
+        if (error.response?.data?.pilotError) {
+          const pilotError = error.response?.data?.pilotError
+          const messageKey = `errors.${pilotError.id}`;
+          let message = t(messageKey, pilotError);
           if (message == messageKey) {
-            message = rentalError.message
+            message = pilotError.message
           }
           toast.add({ severity: 'error', summary: 'Error', detail: message, life: 5000 });
         }
