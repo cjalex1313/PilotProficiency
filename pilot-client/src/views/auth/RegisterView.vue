@@ -58,22 +58,6 @@
               <label for="password">{{ t('confirmPassword') }}</label>
             </FloatLabel>
           </div>
-          <div class="mt-2">
-            <div>{{ t('accountType.label') }}</div>
-            <div
-              v-for="accountType in accountTypes"
-              :key="accountType.key"
-              class="flex items-center gap-2 pl-4"
-            >
-              <RadioButton
-                v-model="authData.accountType"
-                :inputId="accountType.key"
-                name="dynamic"
-                :value="accountType.name"
-              />
-              <label :for="accountType.key">{{ t(`accountType.${accountType.name}`) }}</label>
-            </div>
-          </div>
         </div>
         <div v-if="emailError" class="mt-1 text-red-700">
           {{ emailError }}
@@ -113,7 +97,7 @@ const authData = reactive({
   email: '',
   password: '',
   confirmPassword: '',
-  accountType: 'Tenant',
+  accountType: 'Pilot',
 })
 
 const success = ref(false)
@@ -122,17 +106,6 @@ const isProcessing = ref(false)
 const passwordIsSame = (password) => {
   return password === authData.password
 }
-
-const accountTypes = [
-  {
-    key: 'Tenant',
-    name: 'Tenant',
-  },
-  {
-    key: 'Landlord',
-    name: 'Landlord',
-  },
-]
 
 const rules = {
   email: {
