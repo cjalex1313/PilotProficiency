@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { jwtDecode } from 'jwt-decode'
 import HomeView from '../views/HomeView.vue'
 import BaseLayout from '@/layouts/baseLayout.vue'
 import AuthLayout from '@/layouts/authLayout.vue'
@@ -6,6 +7,8 @@ import LoginView from '@/views/auth/LoginView.vue'
 import RegisterView from '@/views/auth/RegisterView.vue'
 import ForgotPasswordView from '@/views/auth/ForgotPasswordView.vue'
 import ResetPasswordView from '@/views/auth/ResetPasswordView.vue'
+import AdminLayout from '@/layouts/adminLayout.vue'
+import AdminDashboardView from '@/views/admin/AdminDashboardView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,6 +23,19 @@ const router = createRouter({
           path: '/',
           name: 'Home',
           component: HomeView,
+        },
+      ],
+    },
+    {
+      path: '/admin',
+      name: 'AdminLayout',
+      meta: { requireAuth: true, requireAdmin: true },
+      component: AdminLayout,
+      children: [
+        {
+          path: '',
+          name: 'AdminDashboard',
+          component: AdminDashboardView,
         },
       ],
     },
@@ -62,6 +78,17 @@ router.beforeEach((to, from, next) => {
   if (!to.meta.requiresAuth && jwt && to.path.startsWith('/auth')) {
     next({ name: 'Home' })
     return
+  }
+  if (to.meta.requireAdmin) {
+    if (!jwt) {
+      next({ name: 'Login' })
+      return
+    }
+    const decoded = jwtDecode(jwt)
+    if (!decoded?.roles?.includes('Admin')) {
+      next({ name: 'Login' })
+      return
+    }
   }
   next()
 })
