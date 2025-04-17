@@ -80,16 +80,17 @@
       "**/*.(t|j)s"
     ],
     "coveragePathIgnorePatterns": [
-      "/node_modules/",  
-      "/dist/",          
-      "/test/",          
-      "/email/",         
-      "/config/",        
-      "\\.module\\.ts$", 
+      "/node_modules/",
+      "/dist/",
+      "/test/",
+      "/email/",
+      "/config/",
+      "\\.module\\.ts$",
       "exceptions\\.ts$",
-      "main\\.ts$",      
-      "\\.guard\\.ts$",  
-      "\\.entity\\.ts$"  
+      "main\\.ts$",
+      "\\.guard\\.ts$",
+      "\\.decorator\\.ts$",
+      "\\.entity\\.ts$"
     ],
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/$1"

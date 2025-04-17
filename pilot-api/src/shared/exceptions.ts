@@ -6,6 +6,7 @@ export const EXCEPTIONS_IDS = {
   EMAIL_NOT_CONFIRMED: 3,
   EMAIL_NOT_FOUND: 4,
   INCORRECT_PASSWORD: 5,
+  CATEGORY_NAME_EXISTS: 6,
 };
 
 export class EmailAlreadyExistsException extends HttpException {
@@ -82,6 +83,22 @@ export class IncorrectPasswordException extends HttpException {
         pilotError,
       },
       HttpStatus.UNAUTHORIZED,
+    );
+  }
+}
+
+export class CategoryNameExistsException extends HttpException {
+  constructor(name: string) {
+    const pilotError = {
+      id: EXCEPTIONS_IDS.CATEGORY_NAME_EXISTS,
+      message: `Category with name ${name} already exists`,
+      name,
+    };
+    super(
+      {
+        pilotError,
+      },
+      HttpStatus.CONFLICT,
     );
   }
 }

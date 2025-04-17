@@ -83,7 +83,7 @@
 </template>
 
 <script setup>
-import { InputText, FloatLabel, Password, Button, RadioButton } from 'primevue'
+import { InputText, FloatLabel, Password, Button } from 'primevue'
 import { useI18n } from 'vue-i18n'
 import { useVuelidate } from '@vuelidate/core'
 import { email, required } from '@vuelidate/validators'

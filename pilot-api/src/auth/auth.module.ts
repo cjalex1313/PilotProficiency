@@ -8,6 +8,7 @@ import { AuthGuard } from './auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { EmailModule } from 'src/email/email.module';
 import { ConfigModule } from '@nestjs/config';
+import { RoleGuard } from './roles.guard';
 
 @Module({
   imports: [
@@ -27,6 +28,12 @@ import { ConfigModule } from '@nestjs/config';
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
+    {
+      provide: APP_GUARD,
+      useClass: RoleGuard,
+    },
+    RoleGuard,
   ],
+  exports: [RoleGuard],
 })
 export class AuthModule {}
