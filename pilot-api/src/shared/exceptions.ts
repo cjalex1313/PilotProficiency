@@ -7,12 +7,29 @@ export const EXCEPTIONS_IDS = {
   EMAIL_NOT_FOUND: 4,
   INCORRECT_PASSWORD: 5,
   CATEGORY_NAME_EXISTS: 6,
+  CATEGORY_NOT_FOUND: 7,
 };
+
+export class CategoryNotFoundException extends HttpException {
+  constructor(id: string) {
+    const pilotError = {
+      errorId: EXCEPTIONS_IDS.CATEGORY_NOT_FOUND,
+      id,
+      message: `Cateogry with id ${id} does not exist`,
+    };
+    super(
+      {
+        pilotError,
+      },
+      HttpStatus.NOT_FOUND,
+    );
+  }
+}
 
 export class EmailAlreadyExistsException extends HttpException {
   constructor(email: string) {
     const pilotError = {
-      id: EXCEPTIONS_IDS.EMAIL_ALREADY_EXISTS,
+      errorId: EXCEPTIONS_IDS.EMAIL_ALREADY_EXISTS,
       email,
       message: `Email ${email} already exists`,
     };
@@ -28,7 +45,7 @@ export class EmailAlreadyExistsException extends HttpException {
 export class EmailNotValidException extends HttpException {
   constructor(email: string) {
     const pilotError = {
-      id: EXCEPTIONS_IDS.EMAIL_NOT_VALID,
+      errorId: EXCEPTIONS_IDS.EMAIL_NOT_VALID,
       email,
       message: `${email} is not a valid email`,
     };
@@ -44,7 +61,7 @@ export class EmailNotValidException extends HttpException {
 export class EmailNotConfirmedException extends HttpException {
   constructor(email: string) {
     const pilotError = {
-      id: EXCEPTIONS_IDS.EMAIL_NOT_CONFIRMED,
+      errorId: EXCEPTIONS_IDS.EMAIL_NOT_CONFIRMED,
       email,
       message: `${email} is not confirmed. Please check your email.`,
     };
@@ -60,7 +77,7 @@ export class EmailNotConfirmedException extends HttpException {
 export class EmailNotFoundException extends HttpException {
   constructor() {
     const pilotError = {
-      id: EXCEPTIONS_IDS.EMAIL_NOT_FOUND,
+      errorId: EXCEPTIONS_IDS.EMAIL_NOT_FOUND,
       message: 'Email not found',
     };
     super(
@@ -75,7 +92,7 @@ export class EmailNotFoundException extends HttpException {
 export class IncorrectPasswordException extends HttpException {
   constructor() {
     const pilotError = {
-      id: EXCEPTIONS_IDS.INCORRECT_PASSWORD,
+      errorId: EXCEPTIONS_IDS.INCORRECT_PASSWORD,
       message: 'Incorrect password',
     };
     super(
@@ -90,7 +107,7 @@ export class IncorrectPasswordException extends HttpException {
 export class CategoryNameExistsException extends HttpException {
   constructor(name: string) {
     const pilotError = {
-      id: EXCEPTIONS_IDS.CATEGORY_NAME_EXISTS,
+      errorId: EXCEPTIONS_IDS.CATEGORY_NAME_EXISTS,
       message: `Category with name ${name} already exists`,
       name,
     };

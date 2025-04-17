@@ -48,7 +48,7 @@ export function useBaseApi() {
         // that falls out of the range of 2xx
         if (error.response?.data?.pilotError) {
           const pilotError = error.response?.data?.pilotError
-          const messageKey = `errors.${pilotError.id}`;
+          const messageKey = `errors.${pilotError.errorId}`;
           let message = t(messageKey, pilotError);
           if (message == messageKey) {
             message = pilotError.message

@@ -4,7 +4,11 @@ import { Category } from './entities/category.entity';
 import { Document, Model, Types } from 'mongoose';
 import { CategoryCreateDto } from './dtos/category-create.dto';
 import { CategoryDto } from './dtos/category.dto';
-import { CategoryNameExistsException } from 'src/shared/exceptions';
+import {
+  CategoryNameExistsException,
+  CategoryNotFoundException,
+} from 'src/shared/exceptions';
+import { CategoryUpdateDto } from './dtos/category-update.dto';
 
 @Injectable()
 export class CategoryService {
@@ -13,16 +17,44 @@ export class CategoryService {
   ) {}
 
   async getCategories() {
-    const categories = await this.cateogryModel.find().exec();
-    return categories.map((c) => mapDocumentToDto(c));
+    const categories = await this.cateogryModel.find();
+    return categories.map((c) => this.mapDocumentToDto(c));
+  }
+
+  async getCategory(id: string) {
+    const category = await this.cateogryModel.findById(id);
+    if (category == null) {
+      throw new CategoryNotFoundException(id);
+    }
+    return this.mapDocumentToDto(category);
+  }
+
+  async deleteCategory(id: string) {
+    const category = await this.cateogryModel.findById(id);
+    if (category == null) {
+      throw new CategoryNotFoundException(id);
+    }
+    await category.deleteOne();
+  }
+
+  async updateCategory(categoryUpdateDto: CategoryUpdateDto) {
+    const dbCategory = await this.cateogryModel.findById(categoryUpdateDto.id);
+    if (dbCategory == null) {
+      throw new CategoryNotFoundException(categoryUpdateDto.id);
+    }
+    dbCategory.name = categoryUpdateDto.name;
+    dbCategory.description = categoryUpdateDto.description;
+    await dbCategory.save();
+    const resultDto = this.mapDocumentToDto(dbCategory);
+    return resultDto;
   }
 
   async addNewCategory(
     createCategoryDto: CategoryCreateDto,
   ): Promise<CategoryDto> {
-    const existingCategory = await this.cateogryModel
-      .findOne({ name: createCategoryDto.name })
-      .exec();
+    const existingCategory = await this.cateogryModel.findOne({
+      name: createCategoryDto.name,
+    });
     if (existingCategory) {
       throw new CategoryNameExistsException(createCategoryDto.name);
     }
@@ -30,16 +62,17 @@ export class CategoryService {
       name: createCategoryDto.name,
       description: createCategoryDto.description,
     });
-    return mapDocumentToDto(createdCategory);
+    return this.mapDocumentToDto(createdCategory);
   }
-}
-function mapDocumentToDto(
-  category: Document<unknown, object, Category> &
-    Category & { _id: Types.ObjectId } & { __v: number },
-): CategoryDto {
-  return {
-    id: category.id as string,
-    name: category.name,
-    description: category.description,
-  };
+
+  private mapDocumentToDto(
+    category: Document<unknown, object, Category> &
+      Category & { _id: Types.ObjectId } & { __v: number },
+  ): CategoryDto {
+    return new CategoryDto(
+      category.id as string,
+      category.name,
+      category.description,
+    );
+  }
 }
