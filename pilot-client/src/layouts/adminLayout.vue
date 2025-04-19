@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-    <div class="content p-2">
+    <div class="content p-2 grow">
       <RouterView />
     </div>
   </div>
