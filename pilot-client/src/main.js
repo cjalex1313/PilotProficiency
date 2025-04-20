@@ -4,15 +4,13 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
 import Material from '@primeuix/themes/material'
-import { ToastService } from 'primevue'
+import { ToastService, DialogService } from 'primevue'
 
 import App from './App.vue'
 import router from './router'
 import { i18n, loadLocaleMessages, detectBrowserLocale } from './i18n'
 
-
 const app = createApp(App)
-
 
 const browserLocale = detectBrowserLocale()
 await loadLocaleMessages(browserLocale)
@@ -32,5 +30,5 @@ app.use(router)
 
 app.use(i18n)
 app.use(ToastService)
-
+app.use(DialogService)
 app.mount('#app')
