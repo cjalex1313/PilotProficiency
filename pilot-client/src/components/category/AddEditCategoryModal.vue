@@ -24,7 +24,7 @@
     </div>
     <template #footer>
       <Button @click="close" label="Cancel" text severity="secondary" autofocus />
-      <Button label="Save" outlined severity="primary" autofocus />
+      <Button @click="save" label="Save" outlined severity="primary" autofocus />
     </template>
   </Dialog>
 </template>
@@ -33,7 +33,7 @@
 import { Dialog, InputText, FloatLabel, Textarea, Button } from 'primevue'
 import { computed, ref } from 'vue'
 
-const emit = defineEmits(['closed'])
+const emit = defineEmits(['closed', 'saved'])
 const props = defineProps(['category'])
 
 const category = ref(props.category)
@@ -47,6 +47,10 @@ const dialogHeader = computed(() => {
 
 const close = () => {
   emit('closed')
+}
+
+const save = () => {
+  emit('saved', category.value)
 }
 
 const visibleChanged = (val) => {

@@ -4,7 +4,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
 import Material from '@primeuix/themes/material'
-import { ToastService, DialogService } from 'primevue'
+import { ToastService, DialogService, ConfirmationService } from 'primevue'
 
 import App from './App.vue'
 import router from './router'
@@ -31,4 +31,5 @@ app.use(router)
 app.use(i18n)
 app.use(ToastService)
 app.use(DialogService)
+app.use(ConfirmationService)
 app.mount('#app')
