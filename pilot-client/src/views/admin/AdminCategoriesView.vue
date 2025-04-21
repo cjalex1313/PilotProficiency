@@ -16,6 +16,9 @@
               <Button @click="openAddModal" icon="pi pi-plus" rounded raised />
             </div>
           </template>
+          <template #empty>
+            <div class="text-center p-3">No categories found. Please try adding some!</div>
+          </template>
           <Column field="name" header="Name"></Column>
           <Column field="description" header="Description"></Column>
           <Column class="w-24 !text-end">
