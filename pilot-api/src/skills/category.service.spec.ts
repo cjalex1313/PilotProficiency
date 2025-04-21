@@ -6,7 +6,7 @@ import {
   CategoryNameExistsException,
   CategoryNotFoundException,
 } from 'src/shared/exceptions';
-import { CategoryDto } from './dtos/category.dto';
+import { CategoryDto } from './dtos/category/category.dto';
 
 const mockCategoryModel = {
   find: jest.fn(),

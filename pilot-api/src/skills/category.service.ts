@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category } from './entities/category.entity';
 import { Document, Model, Types } from 'mongoose';
-import { CategoryCreateDto } from './dtos/category-create.dto';
-import { CategoryDto } from './dtos/category.dto';
+import { CategoryCreateDto } from './dtos/category/category-create.dto';
+import { CategoryDto } from './dtos/category/category.dto';
 import {
   CategoryNameExistsException,
   CategoryNotFoundException,
 } from 'src/shared/exceptions';
-import { CategoryUpdateDto } from './dtos/category-update.dto';
+import { CategoryUpdateDto } from './dtos/category/category-update.dto';
 
 @Injectable()
 export class CategoryService {
