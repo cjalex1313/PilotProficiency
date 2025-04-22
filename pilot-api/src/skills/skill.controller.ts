@@ -1,10 +1,19 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { SkillService } from './skill.service';
 import { Roles } from 'src/auth/roles.decorator';
 import { Role } from 'src/users/entities/user.entity';
 import { SkillCreateDto } from './dtos/skill-create.dto';
 import { SkillDto } from './dtos/skill.dto';
 import { Skill } from './entities/skill.entity';
+import { SkillUpdateDto } from './dtos/skill-update.dto';
 
 @Controller('skill')
 export class SkillController {
@@ -17,11 +26,32 @@ export class SkillController {
     return responseSkills;
   }
 
+  @Get(':id')
+  async getSkill(@Param('id') id: string) {
+    const skill = await this.skillService.getSkill(id);
+    const response = this.mapSkillToDto(skill);
+    return response;
+  }
+
   @Post('')
   @Roles(Role.Admin)
   async createSkill(@Body() createSkillDto: SkillCreateDto) {
     const createdSkill = await this.skillService.createSkill(createSkillDto);
     return this.mapSkillToDto(createdSkill);
+  }
+
+  @Put('')
+  @Roles(Role.Admin)
+  async updateSkill(@Body() updateSkillDto: SkillUpdateDto) {
+    const newSkill = await this.skillService.updateSkill(updateSkillDto);
+    const response = this.mapSkillToDto(newSkill);
+    return response;
+  }
+
+  @Delete(':id')
+  @Roles(Role.Admin)
+  async deleteSkill(@Param('id') id: string) {
+    await this.skillService.deleteSkill(id);
   }
 
   private mapSkillToDto(skill: Skill): SkillDto {

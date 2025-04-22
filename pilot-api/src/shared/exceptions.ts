@@ -8,7 +8,42 @@ export const EXCEPTIONS_IDS = {
   INCORRECT_PASSWORD: 5,
   CATEGORY_NAME_EXISTS: 6,
   CATEGORY_NOT_FOUND: 7,
+  SKILL_NOT_FOUND: 8,
+  CATEGORY_DELETE_HAS_SKILLS: 9,
 };
+
+export class CategoryDeleteHasSkillException extends HttpException {
+  constructor(categoryName: string, skillCount: number) {
+    const pilotError = {
+      errorId: EXCEPTIONS_IDS.CATEGORY_DELETE_HAS_SKILLS,
+      categoryName,
+      skillCount,
+      message: `Can't delete ${categoryName} since it has ${skillCount} skills assigned to it`,
+    };
+    super(
+      {
+        pilotError,
+      },
+      HttpStatus.CONFLICT,
+    );
+  }
+}
+
+export class SkillNotFoundExpcetion extends HttpException {
+  constructor(id: string) {
+    const pilotError = {
+      errorId: EXCEPTIONS_IDS.SKILL_NOT_FOUND,
+      id,
+      message: `Skill with id ${id} not found`,
+    };
+    super(
+      {
+        pilotError,
+      },
+      HttpStatus.NOT_FOUND,
+    );
+  }
+}
 
 export class CategoryNotFoundException extends HttpException {
   constructor(id: string) {

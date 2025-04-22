@@ -7,12 +7,17 @@ import {
   CategoryNotFoundException,
 } from 'src/shared/exceptions';
 import { CategoryDto } from './dtos/category/category.dto';
+import { Skill } from './entities/skill.entity';
 
 const mockCategoryModel = {
   find: jest.fn(),
   findById: jest.fn(),
   findOne: jest.fn(),
   create: jest.fn(),
+};
+
+const mockSkillModel = {
+  countDocuments: jest.fn(),
 };
 
 describe('CategoryService', () => {
@@ -25,6 +30,10 @@ describe('CategoryService', () => {
         {
           provide: getModelToken(Category.name),
           useValue: mockCategoryModel,
+        },
+        {
+          provide: getModelToken(Skill.name),
+          useValue: mockSkillModel,
         },
       ],
     }).compile();
@@ -109,6 +118,7 @@ describe('CategoryService', () => {
     const cateogryToRetrieveFromDb = {
       deleteOne: jest.fn(),
     };
+    mockSkillModel.countDocuments.mockReturnValue(0);
     mockCategoryModel.findById.mockReturnValue(cateogryToRetrieveFromDb);
 
     await service.deleteCategory('');

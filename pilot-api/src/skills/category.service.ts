@@ -5,15 +5,18 @@ import { Document, Model, Types } from 'mongoose';
 import { CategoryCreateDto } from './dtos/category/category-create.dto';
 import { CategoryDto } from './dtos/category/category.dto';
 import {
+  CategoryDeleteHasSkillException,
   CategoryNameExistsException,
   CategoryNotFoundException,
 } from 'src/shared/exceptions';
 import { CategoryUpdateDto } from './dtos/category/category-update.dto';
+import { Skill } from './entities/skill.entity';
 
 @Injectable()
 export class CategoryService {
   constructor(
     @InjectModel(Category.name) private cateogryModel: Model<Category>,
+    @InjectModel(Skill.name) private skillModel: Model<Skill>,
   ) {}
 
   async getCategories() {
@@ -33,6 +36,10 @@ export class CategoryService {
     const category = await this.cateogryModel.findById(id);
     if (category == null) {
       throw new CategoryNotFoundException(id);
+    }
+    const skillCount = await this.skillModel.countDocuments({ categoryId: id });
+    if (skillCount > 0) {
+      throw new CategoryDeleteHasSkillException(category.name, skillCount);
     }
     await category.deleteOne();
   }
