@@ -20,6 +20,12 @@
             exactActiveClass="bg-indigo-800 text-slate-200 font-bold"
             ><i class="pi pi-folder mr-3"></i>Categories</RouterLink
           >
+          <RouterLink
+            to="/admin/skills"
+            class="block bg-indigo-600 mb-3 p-2 rounded-xl"
+            exactActiveClass="bg-indigo-800 text-slate-200 font-bold"
+            ><i class="pi pi-star mr-3"></i>Skills</RouterLink
+          >
         </div>
       </div>
     </div>

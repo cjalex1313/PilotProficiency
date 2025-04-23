@@ -10,6 +10,7 @@ import ResetPasswordView from '@/views/auth/ResetPasswordView.vue'
 import AdminLayout from '@/layouts/adminLayout.vue'
 import AdminDashboardView from '@/views/admin/AdminDashboardView.vue'
 import AdminCategoriesView from '@/views/admin/AdminCategoriesView.vue'
+import AdminSkillsView from '@/views/admin/AdminSkillsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,8 +42,13 @@ const router = createRouter({
         {
           path: 'categories',
           name: 'AdminCategories',
-          component: AdminCategoriesView
-        }
+          component: AdminCategoriesView,
+        },
+        {
+          path: 'skills',
+          name: 'AdminSkills',
+          component: AdminSkillsView,
+        },
       ],
     },
     {
