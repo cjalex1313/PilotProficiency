@@ -11,6 +11,7 @@ import AdminLayout from '@/layouts/adminLayout.vue'
 import AdminDashboardView from '@/views/admin/AdminDashboardView.vue'
 import AdminCategoriesView from '@/views/admin/AdminCategoriesView.vue'
 import AdminSkillsView from '@/views/admin/AdminSkillsView.vue'
+import AdminSkillAddEditView from '@/views/admin/AdminSkillAddEditView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -48,6 +49,11 @@ const router = createRouter({
           path: 'skills',
           name: 'AdminSkills',
           component: AdminSkillsView,
+        },
+        {
+          path: 'skills/form/:id?',
+          name: 'AdminSkillsFrom',
+          component: AdminSkillAddEditView,
         },
       ],
     },

@@ -4,20 +4,29 @@
     <div class="mt-5">
       <div v-if="isLoading">Loading...</div>
       <div v-else>
-        <DataTable :value="skills">
+        <DataTable :value="skillsToDisplay" dataKey="id">
           <template #header>
             <div class="flex flex-wrap items-center justify-end gap-2">
               <Button @click="goToAddSkill" icon="pi pi-plus" rounded raised />
             </div>
           </template>
-          <Column field="name" header="Name"></Column>
+          <Column field="name" header="Name" sortable></Column>
+          <Column header="Category" field="categoryName" sortable></Column>
           <Column field="description" header="Description"></Column>
-          <Column header="Category">
-            <template #body="slotProps">
-              <span>{{ getCategoryName(slotProps.data.categoryId) }}</span>
+          <Column class="!text-end">
+            <template #body="{ data }">
+              <Button
+                @click="goToEditSkill(data.id)"
+                severity="secondary"
+                rounded
+                class="mr-2"
+                icon="pi pi-pencil"
+              />
+              <Button @click="tryDeleteSkill(data)" severity="danger" rounded icon="pi pi-trash" />
             </template>
           </Column>
         </DataTable>
+        <ConfirmDialog />
       </div>
     </div>
   </div>
@@ -26,11 +35,15 @@
 <script setup>
 import { useCategoryApi } from '@/api/categoryApi'
 import { useSkillApi } from '@/api/skillApi'
-import { DataTable, Column, Button } from 'primevue'
+import { DataTable, Column, Button, useConfirm, useToast, ConfirmDialog } from 'primevue'
 import { onMounted, ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 const categoryApi = useCategoryApi()
 const skillsApi = useSkillApi()
+const router = useRouter()
+const confirm = useConfirm()
+const toast = useToast()
 
 const isLoading = ref(true)
 const categories = ref([])
@@ -54,6 +67,15 @@ onMounted(async () => {
   }
 })
 
+const skillsToDisplay = computed(() => {
+  return skills.value.map((s) => {
+    return {
+      ...s,
+      categoryName: getCategoryName(s.categoryId),
+    }
+  })
+})
+
 // Create a computed property that acts as a fast lookup map
 // Maps category._id -> category.name
 const categoryMap = computed(() => {
@@ -75,6 +97,47 @@ const getCategoryName = (categoryId) => {
 }
 
 const goToAddSkill = () => {
-  console.log('add skill')
+  router.push({
+    name: 'AdminSkillsFrom',
+  })
+}
+
+const goToEditSkill = (id) => {
+  router.push({
+    name: 'AdminSkillsFrom',
+    params: {
+      id,
+    },
+  })
+}
+
+const tryDeleteSkill = (skill) => {
+  confirm.require({
+    message: `Are you sure you want to delete ${skill.name}?`,
+    header: 'Delete skill',
+    icon: 'pi pi-trash',
+    rejectProps: {
+      label: 'Cancel',
+      severity: 'secondary',
+      outlined: true,
+    },
+    acceptProps: {
+      label: 'Delete',
+      severity: 'danger',
+    },
+    accept: async () => {
+      await skillsApi.deleteSkill(skill.id)
+      const indexToRemove = skills.value.findIndex((c) => c.id == skill.id)
+      if (indexToRemove >= 0) {
+        skills.value.splice(indexToRemove, 1)
+      }
+      toast.add({
+        severity: 'success',
+        summary: 'Skill deleted',
+        detail: `${skill.name} deleted`,
+        life: 3000,
+      })
+    },
+  })
 }
 </script>

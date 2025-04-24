@@ -7,5 +7,21 @@ export function useSkillApi() {
     return baseApi.get('/skill')
   }
 
-  return { getSkills }
+  const getSkill = (id) => {
+    return baseApi.get(`/skill/${id}`)
+  }
+
+  const createSkill = (skill) => {
+    return baseApi.post('/skill', skill)
+  }
+
+  const updateSkill = (skill) => {
+    return baseApi.put('/skill', skill)
+  }
+
+  const deleteSkill = (skillId) => {
+    return baseApi.delete(`/skill/${skillId}`)
+  }
+
+  return { getSkills, getSkill, createSkill, updateSkill, deleteSkill }
 }

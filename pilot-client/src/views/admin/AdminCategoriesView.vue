@@ -84,7 +84,6 @@ const openEditModal = (data) => {
 }
 
 const deleteCategory = (data) => {
-  console.log(data)
   confirm.require({
     message: `Are you sure you want to delete ${data.name}?`,
     header: 'Delete category',
