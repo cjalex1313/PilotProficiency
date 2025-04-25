@@ -5,10 +5,15 @@ import { Model } from 'mongoose';
 import { SkillCreateDto } from './dtos/skill-create.dto';
 import { SkillUpdateDto } from './dtos/skill-update.dto';
 import { SkillNotFoundExpcetion } from 'src/shared/exceptions';
+import { UserTrackedSkill } from './entities/userTrackedSkill.entity';
 
 @Injectable()
 export class SkillService {
-  constructor(@InjectModel(Skill.name) private skillModel: Model<Skill>) {}
+  constructor(
+    @InjectModel(Skill.name) private skillModel: Model<Skill>,
+    @InjectModel(UserTrackedSkill.name)
+    private userTrackSkillModel: Model<UserTrackedSkill>,
+  ) {}
 
   async getSkills() {
     const skills = await this.skillModel.find();
@@ -56,5 +61,12 @@ export class SkillService {
       throw new SkillNotFoundExpcetion(skillDto.id);
     }
     return updatedSkill;
+  }
+
+  async getUserTrackedSkills(userId: string) {
+    const userTrackedSkills = await this.userTrackSkillModel.find({
+      userId: userId,
+    });
+    return userTrackedSkills;
   }
 }

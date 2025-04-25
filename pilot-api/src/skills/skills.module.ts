@@ -6,6 +6,10 @@ import { CategoryController } from './category.controller';
 import { Skill, SkillSchema } from './entities/skill.entity';
 import { SkillController } from './skill.controller';
 import { SkillService } from './skill.service';
+import {
+  UserTrackedSkill,
+  UserTrackedSkillSchema,
+} from './entities/userTrackedSkill.entity';
 
 @Module({
   providers: [CategoryService, SkillService],
@@ -14,6 +18,7 @@ import { SkillService } from './skill.service';
     MongooseModule.forFeature([
       { name: Category.name, schema: CategorySchema },
       { name: Skill.name, schema: SkillSchema },
+      { name: UserTrackedSkill.name, schema: UserTrackedSkillSchema },
     ]),
   ],
 })

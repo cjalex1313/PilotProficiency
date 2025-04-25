@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Request,
 } from '@nestjs/common';
 import { SkillService } from './skill.service';
 import { Roles } from 'src/auth/roles.decorator';
@@ -28,6 +29,14 @@ export class SkillController {
     const skills = await this.skillService.getSkills();
     const responseSkills = skills.map((s) => this.mapSkillToDto(s));
     return responseSkills;
+  }
+
+  @Get('tracked-skills')
+  async getUserTrackedSkills(@Request() req) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    const userId: string = req?.user?.sub;
+    const trackedSkills = await this.skillService.getUserTrackedSkills(userId);
+    return trackedSkills;
   }
 
   @Get(':id')
