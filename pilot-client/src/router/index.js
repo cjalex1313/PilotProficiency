@@ -12,6 +12,8 @@ import AdminDashboardView from '@/views/admin/AdminDashboardView.vue'
 import AdminCategoriesView from '@/views/admin/AdminCategoriesView.vue'
 import AdminSkillsView from '@/views/admin/AdminSkillsView.vue'
 import AdminSkillAddEditView from '@/views/admin/AdminSkillAddEditView.vue'
+import SkillsLibraryView from '@/views/SkillsLibraryView.vue'
+import SkillsLibraryDetailsView from '@/views/SkillsLibraryDetailsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +28,16 @@ const router = createRouter({
           path: '/',
           name: 'Home',
           component: HomeView,
+        },
+        {
+          path: '/skills-library',
+          name: 'SkillsLibrary',
+          component: SkillsLibraryView,
+        },
+        {
+          path: '/skills-library/:id',
+          name: 'SkillsLibraryDetails',
+          component: SkillsLibraryDetailsView,
         },
       ],
     },

@@ -14,10 +14,14 @@ import { SkillCreateDto } from './dtos/skill-create.dto';
 import { SkillDto } from './dtos/skill.dto';
 import { Skill } from './entities/skill.entity';
 import { SkillUpdateDto } from './dtos/skill-update.dto';
+import { CategoryService } from './category.service';
 
 @Controller('skill')
 export class SkillController {
-  constructor(private skillService: SkillService) {}
+  constructor(
+    private skillService: SkillService,
+    private cateogryService: CategoryService,
+  ) {}
 
   @Get('')
   async getSkills() {
@@ -61,7 +65,13 @@ export class SkillController {
       description: skill.description,
       instructions: skill.instructions,
       categoryId: skill.categoryId,
+      category: skill.category
+        ? this.cateogryService.mapDocumentToDto(skill.category)
+        : null,
       relatedSkillIds: skill.relatedSkillIds,
+      relatedSkills: skill.relatedSkills
+        ? skill.relatedSkills.map((rs) => this.mapSkillToDto(rs))
+        : null,
     };
   }
 }

@@ -16,7 +16,9 @@ export class SkillService {
   }
 
   async getSkill(id: string) {
-    const skill = await this.skillModel.findById(id);
+    const skill = await this.skillModel
+      .findById(id)
+      .populate(['category', 'relatedSkills']);
     if (skill == null) {
       throw new SkillNotFoundExpcetion(id);
     }

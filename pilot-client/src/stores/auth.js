@@ -1,21 +1,28 @@
-import { useAuthApi } from "@/api/authApi";
-import { defineStore } from "pinia";
-import { reactive } from "vue";
+import { useAuthApi } from '@/api/authApi'
+import { defineStore } from 'pinia'
+import { reactive } from 'vue'
 
-const jwtKey = 'jwt';
+const jwtKey = 'jwt'
 
 export const useAuthStore = defineStore('auth', () => {
-  const authApi = useAuthApi();
+  const authApi = useAuthApi()
 
   const authData = reactive({
-    profile: null
-  });
+    profile: null,
+  })
 
   async function setJwt(accessToken) {
-    localStorage.setItem(jwtKey, accessToken);
-    const profile = await authApi.getProfile();
-    authData.profile = profile;
+    localStorage.setItem(jwtKey, accessToken)
+    const profile = await authApi.getProfile()
+    authData.profile = profile
   }
 
-  return {authData, setJwt}
+  async function signOut() {
+    if (localStorage.getItem(jwtKey)) {
+      localStorage.removeItem(jwtKey)
+    }
+    authData.profile = null
+  }
+
+  return { authData, setJwt, signOut }
 })

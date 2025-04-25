@@ -1,7 +1,5 @@
-<script setup>
-import Button from 'primevue/button'
-</script>
+<script setup></script>
 
 <template>
-  <main>Main screen <Button>Test</Button></main>
+  <main>Main Dashboard</main>
 </template>

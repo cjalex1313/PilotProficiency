@@ -12,17 +12,39 @@
           </template>
           <Column field="name" header="Name" sortable></Column>
           <Column header="Category" field="categoryName" sortable></Column>
-          <Column field="description" header="Description"></Column>
+          <Column field="description" header="Description">
+            <template #body="{ data }">
+              <div class="">
+                <!-- {{
+                  data.description?.length > 20
+                    ? data.description.length.substring(0, 20) + '...'
+                    : data.description
+                }} -->
+                {{
+                  data.description?.length > 30
+                    ? data.description.substring(0, 30) + '...'
+                    : data.description
+                }}
+              </div>
+            </template></Column
+          >
           <Column class="!text-end">
             <template #body="{ data }">
-              <Button
-                @click="goToEditSkill(data.id)"
-                severity="secondary"
-                rounded
-                class="mr-2"
-                icon="pi pi-pencil"
-              />
-              <Button @click="tryDeleteSkill(data)" severity="danger" rounded icon="pi pi-trash" />
+              <div class="flex items-center">
+                <Button
+                  @click="goToEditSkill(data.id)"
+                  severity="secondary"
+                  rounded
+                  class="mr-2"
+                  icon="pi pi-pencil"
+                />
+                <Button
+                  @click="tryDeleteSkill(data)"
+                  severity="danger"
+                  rounded
+                  icon="pi pi-trash"
+                />
+              </div>
             </template>
           </Column>
         </DataTable>

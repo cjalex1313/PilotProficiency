@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category } from './entities/category.entity';
-import { Document, Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { CategoryCreateDto } from './dtos/category/category-create.dto';
 import { CategoryDto } from './dtos/category/category.dto';
 import {
@@ -72,12 +72,9 @@ export class CategoryService {
     return this.mapDocumentToDto(createdCategory);
   }
 
-  private mapDocumentToDto(
-    category: Document<unknown, object, Category> &
-      Category & { _id: Types.ObjectId } & { __v: number },
-  ): CategoryDto {
+  mapDocumentToDto(category: Category): CategoryDto {
     return new CategoryDto(
-      category.id as string,
+      category._id.toString(),
       category.name,
       category.description,
     );
