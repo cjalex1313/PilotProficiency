@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CategoryController } from './category.controller';
-import { CategoryService } from './category.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { RoleGuard } from 'src/auth/roles.guard';
-import { CategoryCreateDto } from './dtos/category/category-create.dto';
-import { CategoryUpdateDto } from './dtos/category/category-update.dto';
+import { CategoryCreateDto } from '../dtos/category/category-create.dto';
+import { CategoryUpdateDto } from '../dtos/category/category-update.dto';
+import { CategoryController } from './category.controller';
+import { CategoryService } from './category.service';
 
 type MockCategoryService = {
   [K in keyof CategoryService]: jest.Mock;

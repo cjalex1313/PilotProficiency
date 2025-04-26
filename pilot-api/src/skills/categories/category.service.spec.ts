@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CategoryService } from './category.service';
 import { getModelToken } from '@nestjs/mongoose';
-import { Category } from './entities/category.entity';
+import { Category } from '../entities/category.entity';
 import {
   CategoryNameExistsException,
   CategoryNotFoundException,
 } from 'src/shared/exceptions';
-import { CategoryDto } from './dtos/category/category.dto';
-import { Skill } from './entities/skill.entity';
+import { CategoryDto } from '../dtos/category/category.dto';
+import { Skill } from '../entities/skill.entity';
 
 const mockCategoryModel = {
   find: jest.fn(),

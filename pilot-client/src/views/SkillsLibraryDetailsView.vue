@@ -78,6 +78,7 @@
 
 <script setup>
 import { useSkillApi } from '@/api/skillApi'
+import { useTrackedSkillsApi } from '@/api/trackedSkillApi'
 import { Button, Checkbox } from 'primevue'
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -85,6 +86,7 @@ import { useRoute, useRouter } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
 const skillsApi = useSkillApi()
+const trackedSkillsApi = useTrackedSkillsApi()
 
 const id = route.params.id
 
@@ -96,7 +98,7 @@ onMounted(async () => {
   try {
     const skillResponse = await skillsApi.getSkill(id)
     skill.value = skillResponse
-    const trackedSkillsResponse = await skillsApi.getUserTrackedSkills()
+    const trackedSkillsResponse = await trackedSkillsApi.getUserTrackedSkills()
     skillTracked.value = trackedSkillsResponse.includes(id)
   } finally {
     isLoading.value = false
@@ -119,9 +121,9 @@ const goToSkill = (id) => {
 
 const trackedChanged = async () => {
   if (skillTracked.value) {
-    await skillsApi.trackSkill(id)
+    await trackedSkillsApi.trackSkill(id)
   } else {
-    await skillsApi.untrackSkill(id)
+    await trackedSkillsApi.untrackSkill(id)
   }
 }
 </script>

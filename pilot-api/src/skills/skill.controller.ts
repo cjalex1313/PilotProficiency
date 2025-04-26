@@ -1,15 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Body,
   Controller,
   Delete,
   Get,
   Param,
-  Patch,
   Post,
   Put,
-  Request,
 } from '@nestjs/common';
 import { SkillService } from './skill.service';
 import { Roles } from 'src/auth/roles.decorator';
@@ -18,7 +14,7 @@ import { SkillCreateDto } from './dtos/skill-create.dto';
 import { SkillDto } from './dtos/skill.dto';
 import { Skill } from './entities/skill.entity';
 import { SkillUpdateDto } from './dtos/skill-update.dto';
-import { CategoryService } from './category.service';
+import { CategoryService } from './categories/category.service';
 
 @Controller('skill')
 export class SkillController {
@@ -32,25 +28,6 @@ export class SkillController {
     const skills = await this.skillService.getSkills();
     const responseSkills = skills.map((s) => this.mapSkillToDto(s));
     return responseSkills;
-  }
-
-  @Get('tracked-skills')
-  async getUserTrackedSkills(@Request() req) {
-    const userId: string = req?.user?.sub;
-    const trackedSkills = await this.skillService.getUserTrackedSkills(userId);
-    return trackedSkills.map((ts) => ts.skillId.toString());
-  }
-
-  @Patch('tracked-skills/track/:skillId')
-  async trackSkill(@Request() req, @Param('skillId') skillId: string) {
-    const userId: string = req?.user?.sub;
-    await this.skillService.userTrackSkill(userId, skillId);
-  }
-
-  @Patch('tracked-skills/untrack/:skillId')
-  async untrackSkill(@Request() req, @Param('skillId') skillId: string) {
-    const userId: string = req?.user?.sub;
-    await this.skillService.userUntrackSkill(userId, skillId);
   }
 
   @Get(':id')

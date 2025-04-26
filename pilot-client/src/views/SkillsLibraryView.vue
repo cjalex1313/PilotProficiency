@@ -48,9 +48,11 @@ import { onMounted, ref, computed } from 'vue'
 import { useCategoryApi } from '@/api/categoryApi'
 import { useSkillApi } from '@/api/skillApi'
 import { useRouter } from 'vue-router'
+import { useTrackedSkillsApi } from '@/api/trackedSkillApi'
 
 const categoryApi = useCategoryApi()
 const skillsApi = useSkillApi()
+const trackedSkillsApi = useTrackedSkillsApi()
 const router = useRouter()
 
 const isLoading = ref(true)
@@ -65,7 +67,7 @@ onMounted(async () => {
   try {
     const categoriesPromise = categoryApi.getCategories()
     const skillsPromise = skillsApi.getSkills()
-    const userTrackedSkillsPromise = skillsApi.getUserTrackedSkills()
+    const userTrackedSkillsPromise = trackedSkillsApi.getUserTrackedSkills()
     const [categoriesResponse, skillsResponse, userTrackSkillsResponse] = await Promise.all([
       categoriesPromise,
       skillsPromise,

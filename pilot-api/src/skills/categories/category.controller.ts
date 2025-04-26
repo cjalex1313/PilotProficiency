@@ -8,10 +8,10 @@ import {
   Put,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
-import { CategoryCreateDto } from './dtos/category/category-create.dto';
+import { CategoryCreateDto } from '../dtos/category/category-create.dto';
 import { Roles } from 'src/auth/roles.decorator';
 import { Role } from 'src/users/entities/user.entity';
-import { CategoryUpdateDto } from './dtos/category/category-update.dto';
+import { CategoryUpdateDto } from '../dtos/category/category-update.dto';
 
 @Controller('category')
 export class CategoryController {
