@@ -30,6 +30,33 @@ export class SkillService {
     return skill;
   }
 
+  async userTrackSkill(userId: string, skillId: string) {
+    const userTrackedSkill = await this.userTrackSkillModel.findOne({
+      userId,
+      skillId,
+    });
+    if (userTrackedSkill == null) {
+      const skill = await this.skillModel.findById(skillId);
+      if (skill == null) {
+        throw new SkillNotFoundExpcetion(skillId);
+      }
+      await this.userTrackSkillModel.create({
+        userId,
+        skillId,
+      });
+    }
+  }
+
+  async userUntrackSkill(userId: string, skillId: string) {
+    const userTrackedSkill = await this.userTrackSkillModel.findOne({
+      userId,
+      skillId,
+    });
+    if (userTrackedSkill != null) {
+      await userTrackedSkill.deleteOne();
+    }
+  }
+
   async createSkill(skillDto: SkillCreateDto) {
     const skillEntity = await this.skillModel.create({
       name: skillDto.name,

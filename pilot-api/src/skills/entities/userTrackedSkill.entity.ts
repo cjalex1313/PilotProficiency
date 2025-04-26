@@ -14,7 +14,7 @@ export class UserTrackedSkill {
   })
   userId: Types.ObjectId;
   @Prop({
-    type: Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Skill',
     required: true,
     index: true,

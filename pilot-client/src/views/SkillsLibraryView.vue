@@ -23,6 +23,14 @@
         </template>
         <Column sortable field="name" header="Name"></Column>
         <Column sortable field="categoryName" header="Category"></Column>
+        <Column header="Status">
+          <template #body="{ data }">
+            <Tag
+              :value="data.isTracked ? 'Tracked' : 'Untracked'"
+              :severity="data.isTracked ? 'success' : 'danger'"
+            />
+          </template>
+        </Column>
         <Column class="w-24 !text-end">
           <template #body="{ data }">
             <Button icon="pi pi-eye" @click="selectRow(data)" severity="secondary" rounded></Button>
@@ -34,7 +42,7 @@
 </template>
 
 <script setup>
-import { DataTable, Column, InputText, IconField, InputIcon, Button } from 'primevue'
+import { DataTable, Column, InputText, IconField, InputIcon, Button, Tag } from 'primevue'
 import { FilterMatchMode } from '@primevue/core/api'
 import { onMounted, ref, computed } from 'vue'
 import { useCategoryApi } from '@/api/categoryApi'
@@ -48,6 +56,7 @@ const router = useRouter()
 const isLoading = ref(true)
 const categories = ref([])
 const skills = ref([])
+const trackedSkills = ref([])
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 })
@@ -56,12 +65,15 @@ onMounted(async () => {
   try {
     const categoriesPromise = categoryApi.getCategories()
     const skillsPromise = skillsApi.getSkills()
-    const [categoriesResponse, skillsResponse] = await Promise.all([
+    const userTrackedSkillsPromise = skillsApi.getUserTrackedSkills()
+    const [categoriesResponse, skillsResponse, userTrackSkillsResponse] = await Promise.all([
       categoriesPromise,
       skillsPromise,
+      userTrackedSkillsPromise,
     ])
     categories.value = categoriesResponse
     skills.value = skillsResponse
+    trackedSkills.value = userTrackSkillsResponse
   } catch {
     this.categories.value = []
     this.skills.value = []
@@ -75,6 +87,7 @@ const skillsToDisplay = computed(() => {
     return {
       ...s,
       categoryName: getCategoryName(s.categoryId),
+      isTracked: trackedSkills.value.includes(s.id),
     }
   })
 })

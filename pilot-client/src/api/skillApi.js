@@ -23,5 +23,26 @@ export function useSkillApi() {
     return baseApi.delete(`/skill/${skillId}`)
   }
 
-  return { getSkills, getSkill, createSkill, updateSkill, deleteSkill }
+  const getUserTrackedSkills = () => {
+    return baseApi.get('/skill/tracked-skills')
+  }
+
+  const trackSkill = (skillId) => {
+    return baseApi.patch(`/skill/tracked-skills/track/${skillId}`)
+  }
+
+  const untrackSkill = (skillId) => {
+    return baseApi.patch(`/skill/tracked-skills/untrack/${skillId}`)
+  }
+
+  return {
+    getSkills,
+    getSkill,
+    createSkill,
+    updateSkill,
+    deleteSkill,
+    getUserTrackedSkills,
+    trackSkill,
+    untrackSkill,
+  }
 }

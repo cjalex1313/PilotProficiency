@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Body,
   Controller,
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Request,
@@ -33,10 +36,21 @@ export class SkillController {
 
   @Get('tracked-skills')
   async getUserTrackedSkills(@Request() req) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const userId: string = req?.user?.sub;
     const trackedSkills = await this.skillService.getUserTrackedSkills(userId);
-    return trackedSkills;
+    return trackedSkills.map((ts) => ts.skillId.toString());
+  }
+
+  @Patch('tracked-skills/track/:skillId')
+  async trackSkill(@Request() req, @Param('skillId') skillId: string) {
+    const userId: string = req?.user?.sub;
+    await this.skillService.userTrackSkill(userId, skillId);
+  }
+
+  @Patch('tracked-skills/untrack/:skillId')
+  async untrackSkill(@Request() req, @Param('skillId') skillId: string) {
+    const userId: string = req?.user?.sub;
+    await this.skillService.userUntrackSkill(userId, skillId);
   }
 
   @Get(':id')
