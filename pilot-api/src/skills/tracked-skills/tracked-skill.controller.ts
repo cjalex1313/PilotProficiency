@@ -2,10 +2,16 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Controller, Get, Param, Patch, Request } from '@nestjs/common';
 import { TrackedSkillsService } from './tracked-skills.service';
+import { SkillService } from '../skill.service';
+import { mapSkillToDto } from '../helpers';
+import { SkillDto } from '../dtos/skill.dto';
 
 @Controller('tracked-skills')
 export class TrackedSkillController {
-  constructor(private trackedSkillsService: TrackedSkillsService) {}
+  constructor(
+    private trackedSkillsService: TrackedSkillsService,
+    private skillsService: SkillService,
+  ) {}
 
   @Get('')
   async getUserTrackedSkills(@Request() req) {
@@ -19,8 +25,14 @@ export class TrackedSkillController {
   async getUserTrackedSkillsFull(@Request() req) {
     const userId: string = req?.user?.sub;
     const trackedSkills =
-      await this.trackedSkillsService.getUserTrackedSkillsFull(userId);
-    return trackedSkills.map((ts) => ts.skillId.toString());
+      await this.trackedSkillsService.getUserTrackedSkills(userId);
+    const skillIds = trackedSkills.map((s) => s.skillId.toString());
+    const skills = await this.skillsService.getSkillsByIds(skillIds);
+    let response: SkillDto[] = [];
+    if (skills) {
+      response = skills.map((s) => mapSkillToDto(s));
+    }
+    return response;
   }
 
   @Patch('track/:skillId')

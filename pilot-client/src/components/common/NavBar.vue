@@ -5,6 +5,7 @@
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
           <!-- Mobile menu button-->
           <button
+            @click="isMobileNavOpen = !isMobileNavOpen"
             type="button"
             class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset"
             aria-controls="mobile-menu"
@@ -106,29 +107,21 @@
     </div>
 
     <!-- Mobile menu, show/hide based on menu state. -->
-    <div class="sm:hidden" id="mobile-menu">
+    <div v-if="isMobileNavOpen" class="sm:hidden" id="mobile-menu">
       <div class="space-y-1 px-2 pt-2 pb-3">
         <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-        <a
-          href="#"
-          class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
+        <RouterLink
+          to="/"
+          class="block rounded-md text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 text-base font-medium"
           aria-current="page"
-          >Dashboard</a
+          exactActiveClass="bg-gray-900 text-white"
+          >Dashboard</RouterLink
         >
-        <a
-          href="#"
-          class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-          >Team</a
-        >
-        <a
-          href="#"
-          class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-          >Projects</a
-        >
-        <a
-          href="#"
-          class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-          >Calendar</a
+        <RouterLink
+          to="/skills-library"
+          class="block rounded-md text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 text-base font-medium"
+          activeClass="bg-gray-900 text-white"
+          >Skill Library</RouterLink
         >
       </div>
     </div>
@@ -138,12 +131,13 @@
 <script setup>
 import { useAuthStore } from '@/stores/auth'
 import { Menu } from 'primevue'
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 const menu = ref(null)
 const authStore = useAuthStore()
 const router = useRouter()
+const route = useRoute()
 
 const menuItems = [
   {
@@ -156,6 +150,12 @@ const menuItems = [
     },
   },
 ]
+
+const isMobileNavOpen = ref(false)
+
+watch(route, () => {
+  isMobileNavOpen.value = false
+})
 
 const toggleMenu = (event) => {
   // Use the menu ref's toggle method, passing the browser event

@@ -25,6 +25,13 @@ export class SkillService {
     return skill;
   }
 
+  async getSkillsByIds(skillIds: string[]) {
+    const skills = await this.skillModel
+      .find({ _id: { $in: skillIds } })
+      .populate(['category']);
+    return skills;
+  }
+
   async createSkill(skillDto: SkillCreateDto) {
     const skillEntity = await this.skillModel.create({
       name: skillDto.name,

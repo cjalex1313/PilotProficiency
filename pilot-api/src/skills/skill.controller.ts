@@ -11,10 +11,9 @@ import { SkillService } from './skill.service';
 import { Roles } from 'src/auth/roles.decorator';
 import { Role } from 'src/users/entities/user.entity';
 import { SkillCreateDto } from './dtos/skill-create.dto';
-import { SkillDto } from './dtos/skill.dto';
-import { Skill } from './entities/skill.entity';
 import { SkillUpdateDto } from './dtos/skill-update.dto';
 import { CategoryService } from './categories/category.service';
+import { mapSkillToDto } from './helpers';
 
 @Controller('skill')
 export class SkillController {
@@ -26,14 +25,14 @@ export class SkillController {
   @Get('')
   async getSkills() {
     const skills = await this.skillService.getSkills();
-    const responseSkills = skills.map((s) => this.mapSkillToDto(s));
+    const responseSkills = skills.map((s) => mapSkillToDto(s));
     return responseSkills;
   }
 
   @Get(':id')
   async getSkill(@Param('id') id: string) {
     const skill = await this.skillService.getSkill(id);
-    const response = this.mapSkillToDto(skill);
+    const response = mapSkillToDto(skill);
     return response;
   }
 
@@ -41,14 +40,14 @@ export class SkillController {
   @Roles(Role.Admin)
   async createSkill(@Body() createSkillDto: SkillCreateDto) {
     const createdSkill = await this.skillService.createSkill(createSkillDto);
-    return this.mapSkillToDto(createdSkill);
+    return mapSkillToDto(createdSkill);
   }
 
   @Put('')
   @Roles(Role.Admin)
   async updateSkill(@Body() updateSkillDto: SkillUpdateDto) {
     const newSkill = await this.skillService.updateSkill(updateSkillDto);
-    const response = this.mapSkillToDto(newSkill);
+    const response = mapSkillToDto(newSkill);
     return response;
   }
 
@@ -56,22 +55,5 @@ export class SkillController {
   @Roles(Role.Admin)
   async deleteSkill(@Param('id') id: string) {
     await this.skillService.deleteSkill(id);
-  }
-
-  private mapSkillToDto(skill: Skill): SkillDto {
-    return {
-      id: skill._id.toString(),
-      name: skill.name,
-      description: skill.description,
-      instructions: skill.instructions,
-      categoryId: skill.categoryId,
-      category: skill.category
-        ? this.cateogryService.mapDocumentToDto(skill.category)
-        : null,
-      relatedSkillIds: skill.relatedSkillIds,
-      relatedSkills: skill.relatedSkills
-        ? skill.relatedSkills.map((rs) => this.mapSkillToDto(rs))
-        : null,
-    };
   }
 }

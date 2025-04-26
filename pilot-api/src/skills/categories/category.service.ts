@@ -11,6 +11,7 @@ import {
 } from 'src/shared/exceptions';
 import { CategoryUpdateDto } from '../dtos/category/category-update.dto';
 import { Skill } from '../entities/skill.entity';
+import { mapCategoryToDto } from '../helpers';
 
 @Injectable()
 export class CategoryService {
@@ -21,7 +22,7 @@ export class CategoryService {
 
   async getCategories() {
     const categories = await this.cateogryModel.find();
-    return categories.map((c) => this.mapDocumentToDto(c));
+    return categories.map((c) => mapCategoryToDto(c));
   }
 
   async getCategory(id: string) {
@@ -29,7 +30,7 @@ export class CategoryService {
     if (category == null) {
       throw new CategoryNotFoundException(id);
     }
-    return this.mapDocumentToDto(category);
+    return mapCategoryToDto(category);
   }
 
   async deleteCategory(id: string) {
@@ -52,7 +53,7 @@ export class CategoryService {
     dbCategory.name = categoryUpdateDto.name;
     dbCategory.description = categoryUpdateDto.description;
     await dbCategory.save();
-    const resultDto = this.mapDocumentToDto(dbCategory);
+    const resultDto = mapCategoryToDto(dbCategory);
     return resultDto;
   }
 
@@ -69,14 +70,6 @@ export class CategoryService {
       name: createCategoryDto.name,
       description: createCategoryDto.description,
     });
-    return this.mapDocumentToDto(createdCategory);
-  }
-
-  mapDocumentToDto(category: Category): CategoryDto {
-    return new CategoryDto(
-      category._id.toString(),
-      category.name,
-      category.description,
-    );
+    return mapCategoryToDto(createdCategory);
   }
 }

@@ -7,6 +7,10 @@ export function useTrackedSkillsApi() {
     return baseApi.get('/tracked-skills')
   }
 
+  const getUserTrackedSkillsFull = () => {
+    return baseApi.get('/tracked-skills/full')
+  }
+
   const trackSkill = (skillId) => {
     return baseApi.patch(`/tracked-skills/track/${skillId}`)
   }
@@ -19,5 +23,6 @@ export function useTrackedSkillsApi() {
     getUserTrackedSkills,
     trackSkill,
     untrackSkill,
+    getUserTrackedSkillsFull,
   }
 }

@@ -110,7 +110,6 @@ const goBack = () => {
 }
 
 const goToSkill = (id) => {
-  console.log(id)
   router.push({
     name: 'SkillsLibraryDetails',
     params: {

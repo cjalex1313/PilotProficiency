@@ -46,13 +46,4 @@ export class TrackedSkillsService {
     });
     return userTrackedSkills;
   }
-
-  async getUserTrackedSkillsFull(userId: string) {
-    const userTrackedSkills = await this.userTrackSkillModel
-      .find({
-        userId: userId,
-      })
-      .populate(['skill']);
-    return userTrackedSkills;
-  }
 }
