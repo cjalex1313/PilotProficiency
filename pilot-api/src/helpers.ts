@@ -1,0 +1,41 @@
+import { PracticeLogDto } from './practice-logs/dtos/practice-log.dto';
+import { PracticeLog } from './practice-logs/entities/practice-log.entity';
+import { CategoryDto } from './skills/dtos/category/category.dto';
+import { SkillDto } from './skills/dtos/skill.dto';
+import { Category } from './skills/entities/category.entity';
+import { Skill } from './skills/entities/skill.entity';
+
+export function mapSkillToDto(skill: Skill): SkillDto {
+  return {
+    id: skill._id.toString(),
+    name: skill.name,
+    description: skill.description,
+    instructions: skill.instructions,
+    categoryId: skill.categoryId,
+    category: skill.category ? mapCategoryToDto(skill.category) : null,
+    relatedSkillIds: skill.relatedSkillIds,
+    relatedSkills: skill.relatedSkills
+      ? skill.relatedSkills.map((rs) => mapSkillToDto(rs))
+      : null,
+  };
+}
+
+export function mapCategoryToDto(category: Category): CategoryDto {
+  return new CategoryDto(
+    category._id.toString(),
+    category.name,
+    category.description,
+  );
+}
+
+export function mapPracticeLogToDto(practiceLog: PracticeLog): PracticeLogDto {
+  return {
+    id: practiceLog._id.toString(),
+    userId: practiceLog.userId.toString(),
+    skillId: practiceLog.skillId.toString(),
+    skill: practiceLog.skill ? mapSkillToDto(practiceLog.skill) : null,
+    practiceDate: practiceLog.practiceDate,
+    proficiency: practiceLog.proficiency,
+    notes: practiceLog.notes,
+  };
+}

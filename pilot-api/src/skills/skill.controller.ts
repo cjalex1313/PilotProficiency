@@ -13,7 +13,7 @@ import { Role } from 'src/users/entities/user.entity';
 import { SkillCreateDto } from './dtos/skill-create.dto';
 import { SkillUpdateDto } from './dtos/skill-update.dto';
 import { CategoryService } from './categories/category.service';
-import { mapSkillToDto } from './helpers';
+import { mapSkillToDto } from '..//helpers';
 
 @Controller('skill')
 export class SkillController {
