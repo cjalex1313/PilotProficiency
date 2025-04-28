@@ -68,9 +68,10 @@ import { computed, onMounted, reactive } from 'vue'
 import { proficiencyOptions } from '@/helpers/constants'
 
 const emit = defineEmits(['closed', 'saved'])
-const props = defineProps(['skill'])
+const props = defineProps(['skill', 'practiceLogToEdit'])
 
 const practiceLog = reactive({
+  id: null,
   skillId: null,
   practiceDate: new Date(),
   proficiency: 0,
@@ -102,6 +103,13 @@ const savePracticeLog = () => {
 onMounted(() => {
   if (props.skill) {
     practiceLog.skillId = props.skill.id
+  }
+  if (props.practiceLogToEdit) {
+    practiceLog.id = props.practiceLogToEdit.id
+    practiceLog.skillId = props.practiceLogToEdit.skillId
+    practiceLog.practiceDate = new Date(props.practiceLogToEdit.practiceDate)
+    practiceLog.proficiency = props.practiceLogToEdit.proficiency
+    practiceLog.notes = props.practiceLogToEdit.notes
   }
 })
 </script>

@@ -16,5 +16,13 @@ export function usePracticeLogsApi() {
     return baseApi.get(`/practice-logs/skill/${skillid}`)
   }
 
-  return { createPracticeLog, getSkillPracticeLogs }
+  const deletePracticeLog = (logId) => {
+    return baseApi.delete(`/practice-logs/${logId}`)
+  }
+
+  const updatePracticeLog = (practiceLog) => {
+    return baseApi.put('/practice-logs', practiceLog)
+  }
+
+  return { createPracticeLog, getSkillPracticeLogs, deletePracticeLog, updatePracticeLog }
 }
