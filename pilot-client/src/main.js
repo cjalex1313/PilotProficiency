@@ -13,7 +13,7 @@ import { i18n, loadLocaleMessages, detectBrowserLocale } from './i18n'
 const app = createApp(App)
 
 const browserLocale = detectBrowserLocale()
-await loadLocaleMessages(browserLocale)
+loadLocaleMessages(browserLocale)
 i18n.global.locale.value = browserLocale
 
 app.use(PrimeVue, {
