@@ -5,8 +5,10 @@
         <div v-if="isLoading">Loading...</div>
         <div v-else>
           <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">My Tracked Skills</h1>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div class="text-center">
+            <Button @click="showPracticeLogModal" label="Log practice" />
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
             <div
               v-for="skill in skills"
               @click="goToSkillPage(skill.id)"
@@ -30,6 +32,12 @@
         </div>
       </main>
     </div>
+    <AddEditPracticeLogModal
+      v-if="practiceLogModalVisible"
+      @closed="closePracticeLogDialog"
+      @saved="addNewPracticeLog"
+      :skills="skills"
+    />
   </div>
 </template>
 
@@ -37,12 +45,17 @@
 import { useTrackedSkillsApi } from '@/api/trackedSkillApi'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { Button } from 'primevue'
+import AddEditPracticeLogModal from '@/components/practice-logs/AddEditPracticeLogModal.vue'
+import { usePracticeLogsApi } from '@/api/practiceLogsApi'
 
 const trackSkillsApi = useTrackedSkillsApi()
 const router = useRouter()
+const practiceLogsApi = usePracticeLogsApi()
 
 const isLoading = ref(true)
 const skills = ref([])
+const practiceLogModalVisible = ref(false)
 
 onMounted(async () => {
   try {
@@ -60,5 +73,18 @@ const goToSkillPage = (skillId) => {
       id: skillId,
     },
   })
+}
+
+const showPracticeLogModal = () => {
+  practiceLogModalVisible.value = true
+}
+
+const closePracticeLogDialog = () => {
+  practiceLogModalVisible.value = false
+}
+
+const addNewPracticeLog = async (logToSave) => {
+  await practiceLogsApi.createPracticeLog(logToSave)
+  practiceLogModalVisible.value = false
 }
 </script>

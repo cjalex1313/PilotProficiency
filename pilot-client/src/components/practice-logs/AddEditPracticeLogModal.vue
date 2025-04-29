@@ -17,7 +17,8 @@
             :options="skillOptions"
             optionLabel="name"
             option-value="id"
-            disabled
+            :disabled="skillsDisabled"
+            :invalid="!!skillIdError"
             fluid
           />
           <label for="skillLabel">Skill</label>
@@ -54,6 +55,9 @@
           <label for="notes">Notes</label>
         </FloatLabel>
       </div>
+      <div v-if="skillIdError" class="mt-2 text-red-700">
+        {{ skillIdError }}
+      </div>
       <div class="mt-6 flex justify-end">
         <Button @click="closeDialog" class="mr-3" label="Cancel" severity="secondary" />
         <Button @click="savePracticeLog" label="Save" />
@@ -66,9 +70,11 @@
 import { Dialog, FloatLabel, Select, DatePicker, Textarea, Button } from 'primevue'
 import { computed, onMounted, reactive } from 'vue'
 import { proficiencyOptions } from '@/helpers/constants'
+import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 
 const emit = defineEmits(['closed', 'saved'])
-const props = defineProps(['skill', 'practiceLogToEdit'])
+const props = defineProps(['skill', 'practiceLogToEdit', 'skills'])
 
 const practiceLog = reactive({
   id: null,
@@ -78,12 +84,27 @@ const practiceLog = reactive({
   notes: null,
 })
 
+const rules = {
+  skillId: {
+    required,
+  },
+}
+
+const v$ = useVuelidate(rules, practiceLog)
+
 const dialogHeader = computed(() => {
   return 'Add new practice log'
 })
 
 const skillOptions = computed(() => {
+  if (props.skills) {
+    return props.skills
+  }
   return [props.skill]
+})
+
+const skillsDisabled = computed(() => {
+  return !props.skills
 })
 
 const visibleChanged = (val) => {
@@ -97,6 +118,10 @@ const closeDialog = () => {
 }
 
 const savePracticeLog = () => {
+  v$.value.$touch()
+  if (v$.value.$invalid) {
+    return
+  }
   emit('saved', practiceLog)
 }
 
@@ -111,5 +136,15 @@ onMounted(() => {
     practiceLog.proficiency = props.practiceLogToEdit.proficiency
     practiceLog.notes = props.practiceLogToEdit.notes
   }
+})
+
+const skillIdError = computed(() => {
+  if (!v$.value.skillId.$dirty) {
+    return ''
+  }
+  if (v$.value.skillId.required.$invalid) {
+    return 'Please select a skill'
+  }
+  return ''
 })
 </script>
