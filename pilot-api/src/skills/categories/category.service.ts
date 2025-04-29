@@ -11,7 +11,7 @@ import {
 } from 'src/shared/exceptions';
 import { CategoryUpdateDto } from '../dtos/category/category-update.dto';
 import { Skill } from '../entities/skill.entity';
-import { mapCategoryToDto } from '../helpers';
+import { mapCategoryToDto } from 'src/helpers';
 
 @Injectable()
 export class CategoryService {

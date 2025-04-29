@@ -56,46 +56,118 @@
               </p>
             </div>
           </div>
-
-          <div v-if="skill.relatedSkills">
-            <h3 class="text-lg font-semibold text-gray-800 mb-2">Related Skills</h3>
-            <div class="flex flex-wrap gap-2">
-              <span
-                v-for="relatedSkill in skill.relatedSkills"
-                :key="relatedSkill.id"
-                @click="goToSkill(relatedSkill.id)"
-                class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 cursor-pointer"
-              >
-                {{ relatedSkill.name }}
-              </span>
+          <div class="flex justify-between">
+            <div v-if="skill.relatedSkills">
+              <h3 class="text-lg font-semibold text-gray-800 mb-2">Related Skills</h3>
+              <div class="flex flex-wrap gap-2">
+                <span
+                  v-for="relatedSkill in skill.relatedSkills"
+                  :key="relatedSkill.id"
+                  @click="goToSkill(relatedSkill.id)"
+                  class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 cursor-pointer"
+                >
+                  {{ relatedSkill.name }}
+                </span>
+              </div>
             </div>
+            <div v-if="skillTracked" class="flex items-center justify-self-end">
+              <Button @click="openPracticeLogDialog" label="Log practice"></Button>
+            </div>
+          </div>
+        </div>
+        <div
+          v-if="skillTracked"
+          class="max-w-6xl mt-8 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6 space-y-4 border border-gray-200"
+        >
+          <div>
+            <h2 class="text-3xl font-bold text-gray-900">Practice logs</h2>
+          </div>
+          <div v-if="practiceLogs">
+            <DataTable :value="practiceLogs" dataKey="id">
+              <Column field="practiceDate" header="Date">
+                <template #body="{ data }">
+                  {{ formatDate(data.practiceDate) }}
+                </template></Column
+              >
+              <Column header="Proficiency" field="proficiency">
+                <template #body="{ data }">
+                  {{ getProficiencyText(data.proficiency) }}
+                </template>
+              </Column>
+              <Column header="Notes" field="notes"
+                ><template #body="{ data }">
+                  <div class="">
+                    {{ data.notes?.length > 20 ? data.notes.substring(0, 20) + '...' : data.notes }}
+                  </div>
+                </template></Column
+              >
+              <Column class="!text-end">
+                <template #body="{ data }">
+                  <div class="flex justify-end items-center">
+                    <Button
+                      @click="tryEditPracticeLog(data)"
+                      severity="secondary"
+                      rounded
+                      class="mr-2"
+                      icon="pi pi-pencil"
+                    />
+                    <Button
+                      @click="tryDeleteLog(data)"
+                      severity="danger"
+                      rounded
+                      icon="pi pi-trash"
+                    />
+                  </div>
+                </template>
+              </Column>
+              <template #empty> No logs found </template>
+            </DataTable>
           </div>
         </div>
       </div>
     </div>
+    <AddEditPracticeLogModal
+      v-if="showPracticeLogDialog"
+      @closed="closePracticeLogDialog"
+      @saved="savedPracticeLogDialog"
+      :skill="skill"
+      :practiceLogToEdit="practiceLogToEdit"
+    />
+    <ConfirmDialog />
   </div>
 </template>
 
 <script setup>
 import { useSkillApi } from '@/api/skillApi'
 import { useTrackedSkillsApi } from '@/api/trackedSkillApi'
-import { Button, Checkbox } from 'primevue'
+import { Button, Checkbox, DataTable, Column, useConfirm, ConfirmDialog, useToast } from 'primevue'
 import { onMounted, ref } from 'vue'
+import { format } from 'date-fns'
 import { useRoute, useRouter } from 'vue-router'
+import AddEditPracticeLogModal from '@/components/practice-logs/AddEditPracticeLogModal.vue'
+import { usePracticeLogsApi } from '@/api/practiceLogsApi'
+import { proficiencyMap } from '@/helpers/constants'
 
 const router = useRouter()
 const route = useRoute()
 const skillsApi = useSkillApi()
 const trackedSkillsApi = useTrackedSkillsApi()
+const practiceLogsApi = usePracticeLogsApi()
+const confirm = useConfirm()
+const toast = useToast()
 
 const id = route.params.id
 
 const isLoading = ref(true)
 const skill = ref(null)
 const skillTracked = ref(false)
+const showPracticeLogDialog = ref(false)
+const practiceLogs = ref([])
+const practiceLogToEdit = ref(null)
 
 onMounted(async () => {
   try {
+    loadPracticeLogs()
     const skillResponse = await skillsApi.getSkill(id)
     skill.value = skillResponse
     const trackedSkillsResponse = await trackedSkillsApi.getUserTrackedSkills()
@@ -104,6 +176,11 @@ onMounted(async () => {
     isLoading.value = false
   }
 })
+
+const tryEditPracticeLog = (practiceLog) => {
+  practiceLogToEdit.value = practiceLog
+  showPracticeLogDialog.value = true
+}
 
 const goBack = () => {
   router.back()
@@ -124,5 +201,69 @@ const trackedChanged = async () => {
   } else {
     await trackedSkillsApi.untrackSkill(id)
   }
+}
+
+const openPracticeLogDialog = () => {
+  showPracticeLogDialog.value = true
+}
+
+const closePracticeLogDialog = () => {
+  showPracticeLogDialog.value = false
+}
+
+const savedPracticeLogDialog = async (logToSave) => {
+  if (logToSave.id) {
+    await practiceLogsApi.updatePracticeLog(logToSave)
+  } else {
+    await practiceLogsApi.createPracticeLog(logToSave)
+  }
+  showPracticeLogDialog.value = false
+  loadPracticeLogs()
+}
+
+const loadPracticeLogs = async () => {
+  const skillLogsResponse = await practiceLogsApi.getSkillPracticeLogs(id)
+  skillLogsResponse.sort((a, b) => {
+    return new Date(b.practiceDate) - new Date(a.practiceDate)
+  })
+  practiceLogs.value = skillLogsResponse
+}
+
+const formatDate = (value) => {
+  return format(value, 'PPP')
+}
+
+const getProficiencyText = (val) => {
+  return proficiencyMap[val]
+}
+
+const tryDeleteLog = (log) => {
+  confirm.require({
+    message: `Are you sure you want to delete the log from ${format(log.practiceDate, 'PP')}?`,
+    header: 'Delete practice log',
+    icon: 'pi pi-trash',
+    rejectProps: {
+      label: 'Cancel',
+      severity: 'secondary',
+      outlined: true,
+    },
+    acceptProps: {
+      label: 'Delete',
+      severity: 'danger',
+    },
+    accept: async () => {
+      await practiceLogsApi.deletePracticeLog(log.id)
+      const indexToRemove = practiceLogs.value.findIndex((c) => c.id == log.id)
+      if (indexToRemove >= 0) {
+        practiceLogs.value.splice(indexToRemove, 1)
+      }
+      toast.add({
+        severity: 'success',
+        summary: 'Skill deleted',
+        detail: `Log from ${format(log.practiceDate, 'PP')} deleted`,
+        life: 3000,
+      })
+    },
+  })
 }
 </script>

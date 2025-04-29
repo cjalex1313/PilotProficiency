@@ -3,7 +3,7 @@
 import { Controller, Get, Param, Patch, Request } from '@nestjs/common';
 import { TrackedSkillsService } from './tracked-skills.service';
 import { SkillService } from '../skill.service';
-import { mapSkillToDto } from '../helpers';
+import { mapSkillToDto } from '../../helpers';
 import { SkillDto } from '../dtos/skill.dto';
 
 @Controller('tracked-skills')
