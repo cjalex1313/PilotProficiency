@@ -39,8 +39,6 @@ export class TrackedSkillController {
     if (skills) {
       response = skills.map((s) => {
         const skillDto = mapSkillToDto(s);
-        console.log(s._id);
-        console.log(latestPracticeLogs);
         const latestPracticeLog = latestPracticeLogs.find((pl) =>
           pl.skillId.equals(s._id),
         );
