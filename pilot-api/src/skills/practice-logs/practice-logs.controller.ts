@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common';
 import { PracticeLogsService } from './practice-logs.service';
 import { mapPracticeLogToDto } from 'src/helpers';
-import { PracticeLogCreateDto } from './dtos/practice-log-create.dto';
-import { PracticeLogUpdateDto } from './dtos/practice-log-update.dto';
+import { PracticeLogCreateDto } from '../dtos/practice-log-create.dto';
+import { PracticeLogUpdateDto } from '../dtos/practice-log-update.dto';
 
 @Controller('practice-logs')
 export class PracticeLogsController {

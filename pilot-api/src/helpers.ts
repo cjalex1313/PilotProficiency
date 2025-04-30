@@ -1,8 +1,8 @@
-import { PracticeLogDto } from './practice-logs/dtos/practice-log.dto';
-import { PracticeLog } from './practice-logs/entities/practice-log.entity';
 import { CategoryDto } from './skills/dtos/category/category.dto';
+import { PracticeLogDto } from './skills/dtos/category/practice-log.dto';
 import { SkillDto } from './skills/dtos/skill.dto';
 import { Category } from './skills/entities/category.entity';
+import { PracticeLog } from './skills/entities/practice-log.entity';
 import { Skill } from './skills/entities/skill.entity';
 
 export function mapSkillToDto(skill: Skill): SkillDto {

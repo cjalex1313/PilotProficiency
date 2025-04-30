@@ -3,14 +3,16 @@
 import { Controller, Get, Param, Patch, Request } from '@nestjs/common';
 import { TrackedSkillsService } from './tracked-skills.service';
 import { SkillService } from '../skill.service';
-import { mapSkillToDto } from '../../helpers';
-import { SkillDto } from '../dtos/skill.dto';
+import { mapPracticeLogToDto, mapSkillToDto } from '../../helpers';
+import { SkillFullDto } from '../dtos/skill.dto';
+import { PracticeLogsService } from '../practice-logs/practice-logs.service';
 
 @Controller('tracked-skills')
 export class TrackedSkillController {
   constructor(
     private trackedSkillsService: TrackedSkillsService,
     private skillsService: SkillService,
+    private practiceLogsService: PracticeLogsService,
   ) {}
 
   @Get('')
@@ -28,9 +30,27 @@ export class TrackedSkillController {
       await this.trackedSkillsService.getUserTrackedSkills(userId);
     const skillIds = trackedSkills.map((s) => s.skillId.toString());
     const skills = await this.skillsService.getSkillsByIds(skillIds);
-    let response: SkillDto[] = [];
+    const latestPracticeLogs =
+      await this.practiceLogsService.getLatestPracticeLogForSkills(
+        userId,
+        skillIds,
+      );
+    let response: SkillFullDto[] = [];
     if (skills) {
-      response = skills.map((s) => mapSkillToDto(s));
+      response = skills.map((s) => {
+        const skillDto = mapSkillToDto(s);
+        console.log(s._id);
+        console.log(latestPracticeLogs);
+        const latestPracticeLog = latestPracticeLogs.find((pl) =>
+          pl.skillId.equals(s._id),
+        );
+        return {
+          ...skillDto,
+          latestPracticeLog: latestPracticeLog
+            ? mapPracticeLogToDto(latestPracticeLog)
+            : null,
+        };
+      });
     }
     return response;
   }
