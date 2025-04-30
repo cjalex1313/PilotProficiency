@@ -60,13 +60,18 @@ const skills = ref([])
 const practiceLogModalVisible = ref(false)
 
 onMounted(async () => {
+  await loadData()
+})
+
+const loadData = async () => {
   try {
+    isLoading.value = true
     const skillsResponse = await trackSkillsApi.getUserTrackedSkillsFull()
     skills.value = skillsResponse
   } finally {
     isLoading.value = false
   }
-})
+}
 
 const needImprovmentsSkills = computed(() => {
   if (!skills.value) {
@@ -97,5 +102,6 @@ const closePracticeLogDialog = () => {
 const addNewPracticeLog = async (logToSave) => {
   await practiceLogsApi.createPracticeLog(logToSave)
   practiceLogModalVisible.value = false
+  await loadData()
 }
 </script>
