@@ -4,10 +4,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { PracticeLog } from './entities/practice-log.entity';
 import { Model } from 'mongoose';
-import { PracticeLogCreateDto } from './dtos/practice-log-create.dto';
-import { PracticeLogUpdateDto } from './dtos/practice-log-update.dto';
+import { PracticeLog } from '../entities/practice-log.entity';
+import { PracticeLogCreateDto } from '../dtos/practice-log-create.dto';
+import { PracticeLogUpdateDto } from '../dtos/practice-log-update.dto';
+import mongoose from 'mongoose';
 
 @Injectable()
 export class PracticeLogsService {
@@ -23,6 +24,47 @@ export class PracticeLogsService {
   async getPracticeLogsForUserSkill(userId: string, skillId: string) {
     const practiceLogs = await this.practiceLogModel.find({ userId, skillId });
     return practiceLogs;
+  }
+
+  async getLatestPracticeLogForSkills(userId: string, skillIds: string[]) {
+    const userIdAsObjectId = new mongoose.Types.ObjectId(userId);
+    const skillIdsAsObjectIds = skillIds.map(
+      (id) => new mongoose.Types.ObjectId(id),
+    );
+
+    const aggregationPipeline = [
+      // 1. Match documents for the specific user and the list of skillIds
+      {
+        $match: {
+          userId: userIdAsObjectId,
+          skillId: { $in: skillIdsAsObjectIds },
+        },
+      },
+      // 2. Sort by practiceDate descending to get the latest entries first
+      {
+        $sort: {
+          practiceDate: -1 as const,
+        },
+      },
+      // 3. Group by skillId and take the *first* document encountered in each group
+      // Since we sorted by date descending, the first document is the latest one.
+      {
+        $group: {
+          _id: '$skillId', // Group by the skillId
+          latestLog: { $first: '$$ROOT' }, // Get the entire document of the first entry in the group
+        },
+      },
+      // 4. Replace the root document structure with the actual latestLog document
+      {
+        $replaceRoot: {
+          newRoot: '$latestLog',
+        },
+      },
+    ];
+
+    const result =
+      await this.practiceLogModel.aggregate<PracticeLog>(aggregationPipeline);
+    return result;
   }
 
   async createPracticeLog(dto: PracticeLogCreateDto, userId: string) {

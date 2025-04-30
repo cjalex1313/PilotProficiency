@@ -12,15 +12,29 @@ import {
 } from './entities/userTrackedSkill.entity';
 import { TrackedSkillController } from './tracked-skills/tracked-skill.controller';
 import { TrackedSkillsService } from './tracked-skills/tracked-skills.service';
+import { PracticeLog, PracticeLogSchema } from './entities/practice-log.entity';
+import { PracticeLogsController } from './practice-logs/practice-logs.controller';
+import { PracticeLogsService } from './practice-logs/practice-logs.service';
 
 @Module({
-  providers: [CategoryService, SkillService, TrackedSkillsService],
-  controllers: [CategoryController, SkillController, TrackedSkillController],
+  providers: [
+    CategoryService,
+    SkillService,
+    TrackedSkillsService,
+    PracticeLogsService,
+  ],
+  controllers: [
+    CategoryController,
+    SkillController,
+    TrackedSkillController,
+    PracticeLogsController,
+  ],
   imports: [
     MongooseModule.forFeature([
       { name: Category.name, schema: CategorySchema },
       { name: Skill.name, schema: SkillSchema },
       { name: UserTrackedSkill.name, schema: UserTrackedSkillSchema },
+      { name: PracticeLog.name, schema: PracticeLogSchema },
     ]),
   ],
 })

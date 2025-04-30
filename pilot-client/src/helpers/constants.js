@@ -23,3 +23,10 @@ export const proficiencyMap = {
   2: 'Good',
   3: 'Excellent',
 }
+
+export const proficiencyColors = {
+  0: 'text-red-600',
+  1: 'text-orange-500',
+  2: 'text-green-500',
+  3: 'text-blue-600',
+}

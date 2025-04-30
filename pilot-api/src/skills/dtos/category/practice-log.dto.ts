@@ -1,5 +1,5 @@
 import { SkillDto } from 'src/skills/dtos/skill.dto';
-import { ProficiencyLevel } from '../entities/practice-log.entity';
+import { ProficiencyLevel } from 'src/skills/entities/practice-log.entity';
 
 export interface PracticeLogDto {
   id: string;
