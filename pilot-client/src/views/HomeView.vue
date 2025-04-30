@@ -8,7 +8,7 @@
           <div class="text-center">
             <Button @click="showPracticeLogModal" label="Log practice" />
           </div>
-          <div>
+          <div v-if="needImprovmentsSkills && needImprovmentsSkills.length > 0">
             <div class="text-2xl font-bold text-gray-800 mt-6">Skills that need improvments</div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
               <div
