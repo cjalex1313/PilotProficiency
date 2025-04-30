@@ -11,63 +11,23 @@
           <div v-if="needImprovmentsSkills && needImprovmentsSkills.length > 0">
             <div class="text-2xl font-bold text-gray-800 mt-6">Skills that need improvments</div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-              <div
+              <FullSkillCard
                 v-for="skill in needImprovmentsSkills"
                 @click="goToSkillPage(skill.id)"
                 :key="skill.id"
-                class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300 ease-in-out"
-              >
-                <div class="p-6">
-                  <h2 class="text-xl font-semibold text-gray-900 mb-2">{{ skill.name }}</h2>
-                  <div class="mb-3 flex justify-between">
-                    <span
-                      class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full"
-                      >{{ skill.category.name }}</span
-                    >
-                    <span
-                      v-if="skill.latestPracticeLog"
-                      class="inline-block"
-                      :class="[proficiencyColors[skill.latestPracticeLog.proficiency]]"
-                    >
-                      {{ proficiencyMap[skill.latestPracticeLog.proficiency] }}
-                    </span>
-                  </div>
-                  <p class="text-gray-600 text-sm">
-                    {{ skill.description }}
-                  </p>
-                </div>
-              </div>
+                :skill="skill"
+              />
             </div>
           </div>
           <div>
             <div class="text-2xl font-bold text-gray-800 mt-6">All tracked skills</div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-              <div
+              <FullSkillCard
                 v-for="skill in skills"
                 @click="goToSkillPage(skill.id)"
                 :key="skill.id"
-                class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300 ease-in-out"
-              >
-                <div class="p-6">
-                  <h2 class="text-xl font-semibold text-gray-900 mb-2">{{ skill.name }}</h2>
-                  <div class="mb-3 flex justify-between">
-                    <span
-                      class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full"
-                      >{{ skill.category.name }}</span
-                    >
-                    <span
-                      v-if="skill.latestPracticeLog"
-                      class="inline-block"
-                      :class="[proficiencyColors[skill.latestPracticeLog.proficiency]]"
-                    >
-                      {{ proficiencyMap[skill.latestPracticeLog.proficiency] }}
-                    </span>
-                  </div>
-                  <p class="text-gray-600 text-sm">
-                    {{ skill.description }}
-                  </p>
-                </div>
-              </div>
+                :skill="skill"
+              />
             </div>
           </div>
         </div>
@@ -89,7 +49,7 @@ import { useRouter } from 'vue-router'
 import { Button } from 'primevue'
 import AddEditPracticeLogModal from '@/components/practice-logs/AddEditPracticeLogModal.vue'
 import { usePracticeLogsApi } from '@/api/practiceLogsApi'
-import { proficiencyColors, proficiencyMap } from '@/helpers/constants'
+import FullSkillCard from '@/components/skills/FullSkillCard.vue'
 
 const trackSkillsApi = useTrackedSkillsApi()
 const router = useRouter()
