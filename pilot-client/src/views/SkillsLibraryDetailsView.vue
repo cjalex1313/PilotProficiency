@@ -124,6 +124,17 @@
             </DataTable>
           </div>
         </div>
+        <div
+          v-if="skillTracked && practiceLogs && practiceLogs.length > 0"
+          class="max-w-6xl mt-8 mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6 space-y-4 border border-gray-200"
+        >
+          <div>
+            <h2 class="text-3xl font-bold text-gray-900">Evolution chart</h2>
+          </div>
+          <div class="mt-4">
+            <Chart type="line" :data="chartData" :options="chartOptions" class="h-[30rem]" />
+          </div>
+        </div>
       </div>
     </div>
     <AddEditPracticeLogModal
@@ -141,12 +152,14 @@
 import { useSkillApi } from '@/api/skillApi'
 import { useTrackedSkillsApi } from '@/api/trackedSkillApi'
 import { Button, Checkbox, DataTable, Column, useConfirm, ConfirmDialog, useToast } from 'primevue'
-import { onMounted, ref } from 'vue'
+import Chart from 'primevue/chart'
+import { onMounted, ref, computed } from 'vue'
 import { format } from 'date-fns'
 import { useRoute, useRouter } from 'vue-router'
 import AddEditPracticeLogModal from '@/components/practice-logs/AddEditPracticeLogModal.vue'
 import { usePracticeLogsApi } from '@/api/practiceLogsApi'
 import { proficiencyMap } from '@/helpers/constants'
+import 'chartjs-adapter-date-fns'
 
 const router = useRouter()
 const route = useRoute()
@@ -266,4 +279,125 @@ const tryDeleteLog = (log) => {
     },
   })
 }
+
+const chartData = computed(() => {
+  if (!practiceLogs.value || practiceLogs.value.length == 0) {
+    return null
+  }
+  // 1. Sort your measurements by date (essential for a coherent line chart)
+  const sortedMeasurements = [...practiceLogs.value] // Create a shallow copy to avoid mutating original ref
+    .sort((a, b) => new Date(a.practiceDate).getTime() - new Date(b.practiceDate).getTime())
+
+  // 2. Map the sorted data to the {x, y} format Chart.js expects for time scales
+  const dataPoints = sortedMeasurements.map((measurement) => ({
+    x: new Date(measurement.practiceDate), // Use the Date object directly for the x-value
+    y: measurement.proficiency, // Use the proficiency for the y-value
+  }))
+
+  // 3. Return the structured data object for PrimeVue/Chart.js
+  return {
+    // Labels are less critical when using {x,y} data format with a time scale,
+    // Chart.js derives labels from the 'x' values. You can provide them if needed
+    // for specific configurations, but often not necessary here.
+    // labels: dataPoints.map(p => p.x.toLocaleDateString()), // Example if needed
+    datasets: [
+      {
+        label: skill.value.name, // Legend label for this dataset
+        data: dataPoints, // The formatted {x, y} data points
+        fill: false, // Don't fill area under the line (set to true for area chart)
+        borderColor: '#42A5F5', // Line color (PrimeVue blue)
+        tension: 0.1, // Makes the line slightly curved (0 for straight lines)
+        // You can add more styling options here (pointRadius, pointBackgroundColor, etc.)
+      },
+      // Add more dataset objects here if you want to plot multiple skills/lines
+    ],
+  }
+})
+
+const chartOptions = ref({
+  responsive: true, // Chart adapts to container size
+  maintainAspectRatio: false, // Recommended for responsiveness in containers
+  plugins: {
+    legend: {
+      position: 'top', // Position of the legend (e.g., 'top', 'bottom', 'left', 'right')
+    },
+    title: {
+      display: true,
+      text: 'Skill Proficiency Over Time', // Chart title
+    },
+    tooltip: {
+      mode: 'index',
+      intersect: false,
+      callbacks: {
+        // Optional: You might want to customize the tooltip label as well
+        label: function (tooltipItem) {
+          const value = tooltipItem.raw.y // The numerical value
+          let label = ''
+          switch (value) {
+            case 0:
+              label = 'Needs Improvement'
+              break
+            case 1:
+              label = 'Satisfactory'
+              break
+            case 2:
+              label = 'Good'
+              break
+            case 3:
+              label = 'Excellent'
+              break
+            default:
+              label = `Value: ${value}` // Fallback for unexpected values
+          }
+          return ` ${tooltipItem.dataset.label}: ${label}`
+        },
+      },
+    },
+  },
+  scales: {
+    x: {
+      type: 'time', // *** This is the crucial setting for the X-axis ***
+      time: {
+        tooltipFormat: 'PPP',
+      },
+      title: {
+        display: true,
+        text: 'Date', // X-axis label
+      },
+      offset: true,
+    },
+    y: {
+      type: 'linear', // Standard numerical axis
+      min: 0, // *** Set Y-axis minimum to 0 ***
+      max: 3, // *** Set Y-axis maximum to 3 ***
+      title: {
+        display: true,
+        text: 'Proficiency', // Y-axis label
+      },
+      ticks: {
+        // *** Ensure ticks align with your defined integer values ***
+        stepSize: 1,
+        // *** Add the callback function for custom labels ***
+        callback: function (value) {
+          // 'value' is the numerical tick value (0, 1, 2, 3...)
+          switch (value) {
+            case 0:
+              return 'Needs Improvement'
+            case 1:
+              return 'Satisfactory'
+            case 2:
+              return 'Good'
+            case 3:
+              return 'Excellent'
+            default:
+              // Hide labels for any other numeric values Chart.js might generate
+              return null
+          }
+        },
+        // Optional: Add padding if labels are long and might overlap axis title/chart
+        padding: 5,
+      },
+    },
+  },
+})
 </script>
