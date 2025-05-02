@@ -15,6 +15,9 @@ import { TrackedSkillsService } from './tracked-skills/tracked-skills.service';
 import { PracticeLog, PracticeLogSchema } from './entities/practice-log.entity';
 import { PracticeLogsController } from './practice-logs/practice-logs.controller';
 import { PracticeLogsService } from './practice-logs/practice-logs.service';
+import { SessionsService } from './sessions/sessions.service';
+import { Session, SessionSchema } from './entities/session.entity';
+import { SessionsController } from './sessions/sessions.controller';
 
 @Module({
   providers: [
@@ -22,12 +25,14 @@ import { PracticeLogsService } from './practice-logs/practice-logs.service';
     SkillService,
     TrackedSkillsService,
     PracticeLogsService,
+    SessionsService,
   ],
   controllers: [
     CategoryController,
     SkillController,
     TrackedSkillController,
     PracticeLogsController,
+    SessionsController,
   ],
   imports: [
     MongooseModule.forFeature([
@@ -35,6 +40,7 @@ import { PracticeLogsService } from './practice-logs/practice-logs.service';
       { name: Skill.name, schema: SkillSchema },
       { name: UserTrackedSkill.name, schema: UserTrackedSkillSchema },
       { name: PracticeLog.name, schema: PracticeLogSchema },
+      { name: Session.name, schema: SessionSchema },
     ]),
   ],
 })
