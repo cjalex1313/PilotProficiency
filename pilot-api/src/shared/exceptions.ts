@@ -10,7 +10,24 @@ export const EXCEPTIONS_IDS = {
   CATEGORY_NOT_FOUND: 7,
   SKILL_NOT_FOUND: 8,
   CATEGORY_DELETE_HAS_SKILLS: 9,
+  SESSION_NOT_FOUND: 10,
 };
+
+export class SessionNotFoundException extends HttpException {
+  constructor(id: string) {
+    const pilotError = {
+      errorId: EXCEPTIONS_IDS.SESSION_NOT_FOUND,
+      id,
+      message: `Session with id ${id} was not found`,
+    };
+    super(
+      {
+        pilotError,
+      },
+      HttpStatus.NOT_FOUND,
+    );
+  }
+}
 
 export class CategoryDeleteHasSkillException extends HttpException {
   constructor(categoryName: string, skillCount: number) {

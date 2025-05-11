@@ -1,12 +1,12 @@
-import { SessionStatus } from 'src/skills/entities/session.entity';
+import { IsDateString, IsNotEmpty } from 'class-validator';
 import { SessionSkillDto } from './session-skill.dto';
 
-export class SessionDto {
-  id: string;
+export class CreateSessionDto {
   name?: string | null;
+  @IsNotEmpty()
+  @IsDateString()
   date: Date;
   durationMinutes?: number | null;
   notes?: string | null;
-  status: SessionStatus;
   skills?: SessionSkillDto[];
 }
