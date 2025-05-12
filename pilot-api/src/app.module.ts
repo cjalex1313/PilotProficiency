@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { EmailModule } from './email/email.module';
 import { SkillsModule } from './skills/skills.module';
+import { AircraftsModule } from './aircrafts/aircrafts.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { SkillsModule } from './skills/skills.module';
     UsersModule,
     EmailModule,
     SkillsModule,
+    AircraftsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

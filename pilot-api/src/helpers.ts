@@ -1,3 +1,5 @@
+import { AircraftCategoryDto } from './aircrafts/dtos/aircraft-category.dto';
+import { AircraftCategory } from './aircrafts/entities/aircraft-category.entity';
 import { CategoryDto } from './skills/dtos/category/category.dto';
 import { PracticeLogDto } from './skills/dtos/category/practice-log.dto';
 import { SkillDto } from './skills/dtos/skill.dto';
@@ -26,6 +28,16 @@ export function mapCategoryToDto(category: Category): CategoryDto {
     category.name,
     category.description,
   );
+}
+
+export function mapAiracraftCategoryToDto(
+  category: AircraftCategory,
+): AircraftCategoryDto {
+  const dto: AircraftCategoryDto = {
+    id: category._id.toString(),
+    name: category.name,
+  };
+  return dto;
 }
 
 export function mapPracticeLogToDto(practiceLog: PracticeLog): PracticeLogDto {
